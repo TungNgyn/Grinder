@@ -4,19 +4,30 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
             textAreaPanel, spielerStatsPanel, auswahlBtnPanel, optionenPanel, logPanel,
-            logBtnPanel;
+            logBtnPanel, adminPanel;
     private static JTextArea mainTextArea;
-    private static JLabel titelLbl;
+    private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp,
+            statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
+            statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHpLbl, spielGegnerHp,
+            spielGegnerLvlLbl, spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl;
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
-            skillBtn4, skillBtn5;
-    private static Container con, conLog;
+            skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5,
+            ausahlBtn1, ausahlBtn2, ausahlBtn3, ausahlBtn4, ausahlBtn5, adminBtn6,
+            adminBtn7;
+    private static Container con, conLog, conAdmin;
     private static JScrollPane logScrollPane, textAreaScroll;
-    static Font titelFont, normalFont, startBtnFont;
+    static Font titelFont, normalFont, startBtnFont, statFont;
+    static Spieler spieler;
+    static String gegnerName;
+    static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl, i;
+    static double gegnerExp;
+    static SpringLayout layout = new SpringLayout();
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
 
@@ -72,13 +83,17 @@ public class Main {
         logPanel = new JPanel();
         logScrollPane = new JScrollPane();
         logScrollPane.setBounds(10,10,450,280);
+        logScrollPane.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        logPanel.add(logScrollPane);
+        logPanel.setLayout(null);
 
         logBtnPanel = new JPanel();
-        logBtnPanel.setBounds(17,300,450,50);
+        logBtnPanel.setBounds(10,300,450,50);
         logBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
-        logPanel.add(logScrollPane);
         conLog = logFrame.getContentPane();
+        conLog.setBackground(Color.GREEN);
+        conLog.revalidate();
         conLog.add(logBtnPanel);
         conLog.add(logPanel);
         logFrame.pack();
@@ -88,10 +103,127 @@ public class Main {
     }
     public static void adminFenster(){
         adminFrame = new JFrame("Admin");
+        adminPanel = new JPanel();
+        conAdmin = new Container();
+
+        //region admin Buttttons
+        adminBtn1 = new JButton("MainText set");
+        adminBtn2 = new JButton("MainText app");
+        adminBtn3 = new JButton("Exp");
+        adminBtn4 = new JButton("DMG");
+        adminBtn5 = new JButton("Heal");
+        adminBtn6 = new JButton("Zombie");
+        adminBtn7 = new JButton("Kampf");
+
+        adminPanel.add(adminBtn1);
+        adminPanel.add(adminBtn2);
+        adminPanel.add(adminBtn3);
+        adminPanel.add(adminBtn4);
+        adminPanel.add(adminBtn5);
+        adminPanel.add(adminBtn6);
+        adminPanel.add(adminBtn7);
+        //endregion
+
+        adminBtn1.addActionListener(e -> {
+            mainTextArea.setText("");
+        });
+        adminBtn2.addActionListener(e -> {
+            mainTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
+        });
+        adminBtn3.addActionListener(e -> {
+            spieler.exp = spieler.exp + 10.0;
+            updateSpielerStats();
+        });
+        adminBtn4.addActionListener(e -> {
+            spieler.hp -= 5;
+            updateSpielerStats();
+        });
+        adminBtn5.addActionListener(e -> {
+            spieler.hp += 5;
+            updateSpielerStats();
+        });
+        adminBtn6.addActionListener(e -> {
+            gegnerName = "Zombie";
+            gegnerMaxHp = 10;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = 10;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = 5;
+            gegnerDef = 5;
+            gegnerExp = 10;
+            gegnerLvl = i;
+            i++;
+            spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxMp);
+            spielGegnerName.setText(gegnerName);
+            spielGegnerLvl.setText(""+gegnerLvl);
+            updateGegnerHp();
+        });
+        adminBtn7.addActionListener(e -> {
+            kampf(new Gegner("Zomb",10,10,5, 5, 0, 1));
+        });
+
+        conAdmin = adminFrame.getContentPane();
+        conAdmin.add(adminPanel);
         adminFrame.setPreferredSize(new Dimension(400,300));
         adminFrame.setResizable(false);
         adminFrame.pack();
         adminFrame.setVisible(true);
+    }
+    public static void updateSpielerStats(){
+        if (spieler.exp>99.9999999999){
+            spieler.lvl++;
+            spieler.exp = 0;
+
+            statSpielerLvl.setText(""+spieler.lvl);
+            spieler.maxHp *= spieler.lvl;
+            spieler.hp = spieler.maxHp;
+            spieler.maxMp *= spieler.lvl;
+            spieler.mp = spieler.maxMp;
+            statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spieler.exp)+"%"));
+            spieler.atk *= spieler.lvl;
+            spieler.def *= spieler.lvl;
+            updateSpielerStats();
+        }
+        statSpielerExp.setText(String.format(Locale.US,"%.2f",spieler.exp)+"%");
+        statSpielerLvl.setText(""+spieler.lvl);
+        statSpielerHp.setText(spieler.hp+"/"+spieler.maxHp);
+        statSpielerMp.setText(spieler.mp+"/"+spieler.maxMp);
+        statSpielerAtk.setText(""+spieler.atk);
+        statSpielerDef.setText(""+spieler.def);
+    }
+    public static void updateGegnerHp(){
+        spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxHp);
+    }
+    public static void kampf(Gegner zombie){
+        zombie.name = gegnerName;
+        zombie.maxHp = gegnerMaxHp*gegnerLvl;
+        zombie.hp = zombie.maxHp;
+        zombie.maxMp = gegnerMaxMp*gegnerLvl;
+        zombie.mp = zombie.maxMp;
+        zombie.atk = gegnerAtk*gegnerLvl;
+        zombie.def = gegnerDef*gegnerLvl;
+        zombie.exp = gegnerExp;
+        zombie.lvl = gegnerLvl;
+
+        updateGegnerHp();
+
+        int angriff = spieler.atk - zombie.def;
+        int schaden = zombie.atk - spieler.def;
+
+        if(spieler.amLeben()&&(zombie.amLeben())){
+            zombie.hp -= angriff;
+            mainTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ zombie.name+"!");
+            if (zombie.amLeben()) {
+                spieler.hp -= schaden;
+                mainTextArea.append("\n"+zombie.name+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
+            } else{
+                mainTextArea.append("\nGewonnen!\n"+spieler.exp+" Erfahrungspunkte erhalten.");
+                spieler.exp += zombie.exp;
+                updateSpielerStats();
+            }
+        }
+        updateSpielerStats();
+        updateGegnerHp();
     }
     public static void spielFenster(){
         //region Layout
@@ -106,11 +238,12 @@ public class Main {
         mainTextArea = new JTextArea();
         mainTextArea.setLineWrap(true);
         mainTextArea.setEditable(false);
-        mainTextArea.setPreferredSize(new Dimension(490,200));
+        mainTextArea.setBounds(0,0,450,500);
 
         textAreaScroll = new JScrollPane(mainTextArea);
-//        textAreaScroll.setPreferredSize(new Dimension(500,130));
-//        textAreaScroll.setBounds(0,0,500,130);
+        textAreaScroll.setPreferredSize(new Dimension(490,125));
+        textAreaScroll.setBorder(BorderFactory.createEmptyBorder());
+        textAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
         skillBtnPanel = new JPanel();
         skillBtnPanel.setLayout(new GridLayout());
@@ -136,9 +269,6 @@ public class Main {
         optionenPanel.add(Box.createHorizontalGlue());
         optionenPanel.add(logBtn);
         //endregion
-        logBtn.addActionListener(e -> {
-            logFrame.setVisible(true);
-        });
 
         //region Skillbuttons
         skillBtn1 = new JButton("Skill1");
@@ -165,6 +295,124 @@ public class Main {
         skillBtnPanel.add(skillBtn4);
         skillBtnPanel.add(skillBtn5);
         //endregion
+        //region Spielerstats
+        spieler = new Spieler("Test",20, 10, 5, 5, 0, 1);
+        statFont = new Font("Segoe UI",Font.BOLD,15);
+        statSpielerName = new JLabel(spieler.name);
+        statSpielerHpLbl = new JLabel("HP");
+        statSpielerHp = new JLabel(spieler.hp+"/"+spieler.maxHp);
+        statSpielerLvlLbl = new JLabel("Level");
+        statSpielerLvl = new JLabel(""+spieler.lvl);
+        statSpielerMpLbl = new JLabel("MP");
+        statSpielerMp = new JLabel(spieler.mp+"/"+spieler.maxMp);
+        statSpielerExpLbl = new JLabel("EXP");
+        statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spieler.exp)+"%");
+        statSpielerAtkLbl = new JLabel("Angriff");
+        statSpielerAtk = new JLabel(""+spieler.atk);
+        statSpielerDefLbl = new JLabel("Verteidigung");
+        statSpielerDef = new JLabel(""+spieler.def);
+
+        statSpielerName.setFont(statFont);
+        statSpielerHpLbl.setFont(statFont);
+        statSpielerHp.setFont(statFont);
+        statSpielerLvlLbl.setFont(statFont);
+        statSpielerLvl.setFont(statFont);
+        statSpielerMpLbl.setFont(statFont);
+        statSpielerMp.setFont(statFont);
+        statSpielerExpLbl.setFont(statFont);
+        statSpielerExp.setFont(statFont);
+        statSpielerAtkLbl.setFont(statFont);
+        statSpielerAtk.setFont(statFont);
+        statSpielerDefLbl.setFont(statFont);
+        statSpielerDef.setFont(statFont);
+
+        //layout links
+        layout.putConstraint(SpringLayout.WEST,statSpielerName,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerHpLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerMpLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerExpLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerAtkLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerDefLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerLvlLbl,20, SpringLayout.WEST,spielerStatsPanel);
+
+      //  layout.putConstraint(SpringLayout.NORTH,statSpielerName,20, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,20, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerHpLbl,50, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerMpLbl,80, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExpLbl,110, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerAtkLbl,140, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerDefLbl,170, SpringLayout.NORTH,spielerStatsPanel);
+
+        //layout rechts
+        layout.putConstraint(SpringLayout.EAST,statSpielerHp,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statSpielerMp,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statSpielerExp,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statSpielerAtk,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statSpielerDef,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statSpielerLvl,-20, SpringLayout.EAST,spielerStatsPanel);
+
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvl,20, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerHp,50, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerMp,80, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExp,110, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerAtk,140, SpringLayout.NORTH,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerDef,170, SpringLayout.NORTH,spielerStatsPanel);
+
+
+        spielerStatsPanel.setLayout(layout);
+        spielerStatsPanel.add(statSpielerName);
+        spielerStatsPanel.add(statSpielerHpLbl);
+        spielerStatsPanel.add(statSpielerHp);
+        spielerStatsPanel.add(statSpielerLvlLbl);
+        spielerStatsPanel.add(statSpielerLvl);
+        spielerStatsPanel.add(statSpielerMpLbl);
+        spielerStatsPanel.add(statSpielerMp);
+        spielerStatsPanel.add(statSpielerExpLbl);
+        spielerStatsPanel.add(statSpielerExp);
+        spielerStatsPanel.add(statSpielerAtkLbl);
+        spielerStatsPanel.add(statSpielerAtk);
+        spielerStatsPanel.add(statSpielerDefLbl);
+        spielerStatsPanel.add(statSpielerDef);
+
+ //       spielerStatsPanel.add(statPanel);
+        //endregion
+        //region AuswahlBtn
+        ausahlBtn1 = new JButton("Auswahl 1");
+        ausahlBtn2 = new JButton("Auswahl 2");
+        ausahlBtn3 = new JButton("Auswahl 3");
+        ausahlBtn4 = new JButton("Auswahl 4");
+        ausahlBtn5 = new JButton("Auswahl 5");
+
+        ausahlBtn1.setFont(normalFont);
+        ausahlBtn2.setFont(normalFont);
+        ausahlBtn3.setFont(normalFont);
+        ausahlBtn4.setFont(normalFont);
+        ausahlBtn5.setFont(normalFont);
+
+        auswahlBtnPanel.setLayout(new GridLayout(5,1));
+        auswahlBtnPanel.add(ausahlBtn1);
+        auswahlBtnPanel.add(ausahlBtn2);
+        auswahlBtnPanel.add(ausahlBtn3);
+        auswahlBtnPanel.add(ausahlBtn4);
+        auswahlBtnPanel.add(ausahlBtn5);
+        //endregion
+        //region GegnerPanel
+        spielGegnerHpLbl = new JLabel("HP");
+        spielGegnerHp = new JLabel(gegnerHp+"/"+gegnerMaxHp);
+        spielGegnerName = new JLabel(gegnerName);
+        spielGegnerLvlLbl = new JLabel("Level");
+        spielGegnerLvl = new JLabel(""+gegnerLvl);
+
+        spielPanel.add(spielGegnerHpLbl);
+        spielPanel.add(spielGegnerHp);
+        spielPanel.add(spielGegnerName);
+        spielPanel.add(spielGegnerLvlLbl);
+        spielPanel.add(spielGegnerLvl);
+        //endregion
+
+        logBtn.addActionListener(e -> {
+            logFrame.setVisible(true);
+        });
 
         titelPanel.setVisible(false);
         titelStartBtnPanel.setVisible(false);
@@ -176,12 +424,13 @@ public class Main {
         con.add(auswahlBtnPanel);
         con.add(optionenPanel);
         con.setVisible(true);
+        con.revalidate();
         con.repaint();
     }
     public class TitleScreenHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            adminFenster();
             spielFenster();
+            adminFenster();
         }
     }
 }
