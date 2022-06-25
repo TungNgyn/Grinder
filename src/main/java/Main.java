@@ -143,23 +143,14 @@ public class Main {
             updateSpielerStats();
         });
         adminBtn6.addActionListener(e -> {
-            gegnerName = "Zombie";
-            gegnerMaxHp = 10;
-            gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = 10;
-            gegnerMp = gegnerMaxMp;
-            gegnerAtk = 5;
-            gegnerDef = 5;
-            gegnerExp = 10;
-            gegnerLvl = i;
-            i++;
-            spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxMp);
-            spielGegnerName.setText(gegnerName);
-            spielGegnerLvl.setText(""+gegnerLvl);
+            Gegner.zombie.hp = Gegner.zombie.maxHp;
+            gegnerHp = Gegner.zombie.hp;
+            gegnerMaxHp = Gegner.zombie.maxHp;
             updateGegnerHp();
         });
         adminBtn7.addActionListener(e -> {
-            kampf(new Gegner("Zomb",10,10,5, 5, 0, 1));
+            kampf();
+            System.out.println(Gegner.zombie.hp);
         });
 
         conAdmin = adminFrame.getContentPane();
@@ -192,33 +183,25 @@ public class Main {
         statSpielerDef.setText(""+spieler.def);
     }
     public static void updateGegnerHp(){
+        //Test
+        gegnerHp = Gegner.zombie.hp;
+        gegnerMaxHp = Gegner.zombie.maxHp;
+        //Testtende
         spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxHp);
     }
-    public static void kampf(Gegner zombie){
-        zombie.name = gegnerName;
-        zombie.maxHp = gegnerMaxHp*gegnerLvl;
-        zombie.hp = zombie.maxHp;
-        zombie.maxMp = gegnerMaxMp*gegnerLvl;
-        zombie.mp = zombie.maxMp;
-        zombie.atk = gegnerAtk*gegnerLvl;
-        zombie.def = gegnerDef*gegnerLvl;
-        zombie.exp = gegnerExp;
-        zombie.lvl = gegnerLvl;
+    public static void kampf(){
+        int angriff = spieler.attack() - gegnerDef;
+        int schaden = gegnerAtk - spieler.defend();
 
-        updateGegnerHp();
-
-        int angriff = spieler.atk - zombie.def;
-        int schaden = zombie.atk - spieler.def;
-
-        if(spieler.amLeben()&&(zombie.amLeben())){
-            zombie.hp -= angriff;
-            mainTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ zombie.name+"!");
-            if (zombie.amLeben()) {
+        if(spieler.amLeben()&&(gegnerHp > 0)){
+            gegnerHp -= angriff;
+            mainTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
+            if (gegnerHp > 0) {
                 spieler.hp -= schaden;
-                mainTextArea.append("\n"+zombie.name+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
+                mainTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
             } else{
                 mainTextArea.append("\nGewonnen!\n"+spieler.exp+" Erfahrungspunkte erhalten.");
-                spieler.exp += zombie.exp;
+                spieler.exp += gegnerExp;
                 updateSpielerStats();
             }
         }

@@ -3,14 +3,12 @@ public class Spieler extends Charaktere{
         super(name, maxHp, maxMp, atk, def, exp, lvl);
     }
 
-    @Override
     public int attack() {
-        return 0;
+        return atk;
     }
 
-    @Override
     public int defend() {
-        return 0;
+        return def;
     }
 
     public boolean amLeben(){

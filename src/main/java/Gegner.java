@@ -3,13 +3,16 @@ public class Gegner extends Charaktere{
         super(name, maxHp, maxMp, atk, def, exp, lvl);
     }
 
-    public boolean amLeben(){
-        return hp > 0;
-    }
-    public int attack(){
+    public int attack() {
         return 0;
     }
-    public int defend(){
+
+    public int defend() {
         return 0;
     }
+
+    static Gegner zombie = new Gegner("Zombie", 10,10,5,5,10,1);
+    static Gegner monster = new Gegner("Monster", 20, 20, 10, 10, 20, 1);
+
+
 }
