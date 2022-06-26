@@ -11,8 +11,8 @@ public class Main {
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
             textAreaPanel, spielerStatsPanel, auswahlBtnPanel, optionenPanel, logPanel,
             logBtnPanel, adminPanel;
-    private static JTextArea mainTextArea;
-    private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp,
+    private static JTextArea logTextArea;
+    private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp, mainTextLbl,
             statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
             statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHpLbl, spielGegnerHp,
             spielGegnerLvlLbl, spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl;
@@ -21,7 +21,7 @@ public class Main {
             ausahlBtn1, ausahlBtn2, ausahlBtn3, ausahlBtn4, ausahlBtn5, adminBtn6,
             adminBtn7;
     private static Container con, conLog, conAdmin;
-    private static JScrollPane logScrollPane, textAreaScroll;
+    private static JScrollPane logTextAreaScroll, textAreaScroll;
     static Font titelFont, normalFont, startBtnFont, statFont;
     static Spieler spieler;
     static String gegnerName;
@@ -81,14 +81,20 @@ public class Main {
         logFrame.setResizable(false);
 
         logPanel = new JPanel();
-        logScrollPane = new JScrollPane();
-        logScrollPane.setBounds(10,10,450,280);
-        logScrollPane.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
-        logPanel.add(logScrollPane);
-        logPanel.setLayout(null);
+        logTextArea = new JTextArea();
+        logTextArea.setLineWrap(true);
+        logTextArea.setEditable(false);
+
+        logTextAreaScroll = new JScrollPane(logTextArea);
+        logTextAreaScroll.setPreferredSize(new Dimension(450,285));
+        logTextAreaScroll.setBorder(BorderFactory.createEmptyBorder());
+        logTextAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        logTextAreaScroll.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        logPanel.add(logTextAreaScroll);
+        logPanel.setBackground(Color.GREEN);
 
         logBtnPanel = new JPanel();
-        logBtnPanel.setBounds(10,300,450,50);
+        logBtnPanel.setBounds(17,300,450,50);
         logBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
         conLog = logFrame.getContentPane();
@@ -124,11 +130,10 @@ public class Main {
         adminPanel.add(adminBtn7);
         //endregion
 
-        adminBtn1.addActionListener(e -> {
-            mainTextArea.setText("");
-        });
+        adminBtn1.addActionListener(e -> logTextArea.setText(""));
         adminBtn2.addActionListener(e -> {
-            mainTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
+            mainTextLbl.setText("<br>aaaaaaaaaaaaaaaaaa<br>bbbbbbbbbbbbbb<br>>cccccccccccc<br>ddddddddddddd<br>eeeeeeeeeeee");
+            logTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
         });
         adminBtn3.addActionListener(e -> {
             spieler.exp = spieler.exp + 10.0;
@@ -143,14 +148,20 @@ public class Main {
             updateSpielerStats();
         });
         adminBtn6.addActionListener(e -> {
-            Gegner.zombie.hp = Gegner.zombie.maxHp;
-            gegnerHp = Gegner.zombie.hp;
+            gegnerName = Gegner.zombie.name;
             gegnerMaxHp = Gegner.zombie.maxHp;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = Gegner.zombie.maxMp;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = Gegner.zombie.attack();
+            gegnerDef = Gegner.zombie.defend();
+            gegnerExp = Gegner.zombie.exp;
+            gegnerLvl = Gegner.zombie.lvl;
             updateGegnerHp();
         });
         adminBtn7.addActionListener(e -> {
             kampf();
-            System.out.println(Gegner.zombie.hp);
+            System.out.println(gegnerHp);
         });
 
         conAdmin = adminFrame.getContentPane();
@@ -183,10 +194,6 @@ public class Main {
         statSpielerDef.setText(""+spieler.def);
     }
     public static void updateGegnerHp(){
-        //Test
-        gegnerHp = Gegner.zombie.hp;
-        gegnerMaxHp = Gegner.zombie.maxHp;
-        //Testtende
         spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxHp);
     }
     public static void kampf(){
@@ -195,12 +202,15 @@ public class Main {
 
         if(spieler.amLeben()&&(gegnerHp > 0)){
             gegnerHp -= angriff;
-            mainTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
+            logTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
+            mainTextLbl.setText("<html>"+spieler.name+" verursacht "+angriff+" Schaden an "+gegnerName+"!");
             if (gegnerHp > 0) {
                 spieler.hp -= schaden;
-                mainTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
+                logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
+                mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
             } else{
-                mainTextArea.append("\nGewonnen!\n"+spieler.exp+" Erfahrungspunkte erhalten.");
+                logTextArea.append("\nGewonnen!\n"+spieler.exp+" Erfahrungspunkte erhalten.");
+                mainTextLbl.setText(mainTextLbl.getText()+"<br>Gewonnen!<br>"+spieler.exp+" Erfahrungspunkte erhalten.");
                 spieler.exp += gegnerExp;
                 updateSpielerStats();
             }
@@ -218,15 +228,9 @@ public class Main {
         textAreaPanel.setBounds(20,330,500,140);
         textAreaPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
-        mainTextArea = new JTextArea();
-        mainTextArea.setLineWrap(true);
-        mainTextArea.setEditable(false);
-        mainTextArea.setBounds(0,0,450,500);
-
-        textAreaScroll = new JScrollPane(mainTextArea);
-        textAreaScroll.setPreferredSize(new Dimension(490,125));
-        textAreaScroll.setBorder(BorderFactory.createEmptyBorder());
-        textAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        mainTextLbl = new JLabel("<html>TEST<br>hallotestt2<br>qweqe");
+        mainTextLbl.setFont(normalFont);
+        textAreaPanel.setBackground(Color.GREEN);
 
         skillBtnPanel = new JPanel();
         skillBtnPanel.setLayout(new GridLayout());
@@ -393,13 +397,11 @@ public class Main {
         spielPanel.add(spielGegnerLvl);
         //endregion
 
-        logBtn.addActionListener(e -> {
-            logFrame.setVisible(true);
-        });
+        logBtn.addActionListener(e -> logFrame.setVisible(true));
 
         titelPanel.setVisible(false);
         titelStartBtnPanel.setVisible(false);
-        textAreaPanel.add(textAreaScroll);
+        textAreaPanel.add(mainTextLbl);
         con.add(spielerStatsPanel);
         con.add(spielPanel);
         con.add(skillBtnPanel);
@@ -410,7 +412,7 @@ public class Main {
         con.revalidate();
         con.repaint();
     }
-    public class TitleScreenHandler implements ActionListener{
+    public static class TitleScreenHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
             spielFenster();
             adminFenster();
