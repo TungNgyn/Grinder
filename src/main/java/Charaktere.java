@@ -7,7 +7,7 @@ public abstract class Charaktere {
     public int atk;
     public int def;
     public double exp;
-    public int lvl;
+    public static int lvl;
 
     public Charaktere(String name, int maxHp, int maxMp, int atk, int def, double exp, int lvl){
         this.name = name;

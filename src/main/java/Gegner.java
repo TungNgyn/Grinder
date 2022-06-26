@@ -4,14 +4,14 @@ public class Gegner extends Charaktere{
     }
 
     public int attack() {
-        return 0;
+        return atk;
     }
 
     public int defend() {
-        return 0;
+        return def;
     }
 
-    static Gegner zombie = new Gegner("Zombie", 10,10,5,5,10,1);
+    static Gegner zombie = new Gegner("Zombie", 10,10,5,5,10, 1);
     static Gegner monster = new Gegner("Monster", 20, 20, 10, 10, 20, 1);
 
 

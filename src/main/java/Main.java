@@ -21,8 +21,8 @@ public class Main {
             ausahlBtn1, ausahlBtn2, ausahlBtn3, ausahlBtn4, ausahlBtn5, adminBtn6,
             adminBtn7;
     private static Container con, conLog, conAdmin;
-    private static JScrollPane logTextAreaScroll, textAreaScroll;
-    static Font titelFont, normalFont, startBtnFont, statFont;
+    private static JScrollPane logTextAreaScroll;
+    static Font titelFont, normalFont, startBtnFont, statFont, textFont;
     static Spieler spieler;
     static String gegnerName;
     static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl, i;
@@ -42,6 +42,7 @@ public class Main {
         titelFont = new Font("Times New Roman", Font.BOLD, 90);
         startBtnFont = new Font("Segoe UI", Font.BOLD,30);
         normalFont = new Font("Segoe UI", Font.BOLD,25);
+        textFont = new Font("Segoe UI",Font.BOLD,15);
 
         titelPanel = new JPanel();
         titelPanel.setBounds(100,50,600,250);
@@ -84,6 +85,7 @@ public class Main {
         logTextArea = new JTextArea();
         logTextArea.setLineWrap(true);
         logTextArea.setEditable(false);
+        logTextArea.setFont(textFont);
 
         logTextAreaScroll = new JScrollPane(logTextArea);
         logTextAreaScroll.setPreferredSize(new Dimension(450,285));
@@ -148,15 +150,15 @@ public class Main {
             updateSpielerStats();
         });
         adminBtn6.addActionListener(e -> {
+            Gegner.zombie.lvl = 2;
             gegnerName = Gegner.zombie.name;
-            gegnerMaxHp = Gegner.zombie.maxHp;
+            gegnerMaxHp = Gegner.zombie.maxHp*Gegner.zombie.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.zombie.maxMp;
+            gegnerMaxMp = Gegner.zombie.maxMp*Gegner.zombie.lvl;
             gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.zombie.attack();
-            gegnerDef = Gegner.zombie.defend();
+            gegnerAtk = Gegner.zombie.attack()*Gegner.zombie.lvl;
+            gegnerDef = Gegner.zombie.defend()*Gegner.zombie.lvl;
             gegnerExp = Gegner.zombie.exp;
-            gegnerLvl = Gegner.zombie.lvl;
             updateGegnerHp();
         });
         adminBtn7.addActionListener(e -> {
@@ -229,8 +231,7 @@ public class Main {
         textAreaPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
         mainTextLbl = new JLabel("<html>TEST<br>hallotestt2<br>qweqe");
-        mainTextLbl.setFont(normalFont);
-        textAreaPanel.setBackground(Color.GREEN);
+        mainTextLbl.setFont(textFont);
 
         skillBtnPanel = new JPanel();
         skillBtnPanel.setLayout(new GridLayout());
