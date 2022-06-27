@@ -9,21 +9,20 @@ import java.util.Locale;
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
-            textAreaPanel, spielerStatsPanel, auswahlBtnPanel, optionenPanel, logPanel,
-            logBtnPanel, adminPanel;
+            textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel, logPanel,
+            logBtnPanel, adminPanel, auswahlPanel;
     private static JTextArea logTextArea;
     private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp, mainTextLbl,
             statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
             statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHpLbl, spielGegnerHp,
             spielGegnerLvlLbl, spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl;
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
-            skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5,
-            ausahlBtn1, ausahlBtn2, ausahlBtn3, ausahlBtn4, ausahlBtn5, adminBtn6,
-            adminBtn7, adminBtn8, adminBtn9;
+            skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5, adminBtn6,
+            adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
+    private static JProgressBar spielerHealthBar, spielerExpBar;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont;
-    static Spieler spieler;
     static String gegnerName, spielerName;
     static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl,
                 spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl;
@@ -172,16 +171,7 @@ public class Main {
         });
 
         adminBtn8.addActionListener(e -> {
-            spielerName = Spieler.krieger.name;
-            spielerMaxHp = Spieler.krieger.maxHp;
-            spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.krieger.maxMp;
-            spielerMp = spielerMaxMp;
-            spielerAtk = Spieler.krieger.attack();
-            spielerDef = Spieler.krieger.defend();
-            spielerExp = Spieler.krieger.exp;
-            spielerLvl = Spieler.krieger.lvl;
-            updateSpielerStats();
+
         });
 
         adminBtn9.addActionListener(e -> {
@@ -215,8 +205,8 @@ public class Main {
             spielerMaxMp *= spielerLvl;
             spielerMp = spielerMaxMp;
             statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spielerExp)+"%"));
-            spielerAtk *= spielerLvl;
-            spielerDef *= spielerLvl;
+            spielerAtk = spielerLvl;
+            spielerDef = spielerLvl;
             updateSpielerStats();
         }
         statSpielerName.setText(spielerName);
@@ -226,6 +216,8 @@ public class Main {
         statSpielerMp.setText(spielerMp+"/"+spielerMaxMp);
         statSpielerAtk.setText(""+spielerAtk);
         statSpielerDef.setText(""+spielerDef);
+        spielerHealthBar.setValue(spielerHp);
+        spielerExpBar.setValue((int)spielerExp);
     }
     public static void updateGegnerHp(){
         spielGegnerLvl.setText(""+gegnerLvl);
@@ -248,6 +240,7 @@ public class Main {
             mainTextLbl.setText("<html>"+spielerName+" verursacht "+angriff+" Schaden an "+gegnerName+"!");
             if (gegnerHp > 0) {
                 spielerHp -= schaden;
+                spielerHealthBar.setValue(spielerHp);
                 logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
                 mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
                 if (spielerHp <= 0){
@@ -289,9 +282,21 @@ public class Main {
         spielerStatsPanel.setBounds(550,90,215,230);
         spielerStatsPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
-        auswahlBtnPanel = new JPanel();
-        auswahlBtnPanel.setBounds(550,330,215,210);
-        auswahlBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        spielerProgressPanel = new JPanel();
+        spielerProgressPanel.setBounds(550,330,215,210);
+        spielerProgressPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+
+        spielerHealthBar = new JProgressBar(0,spielerMaxHp);
+        spielerHealthBar.setFont(normalFont);
+        spielerHealthBar.setStringPainted(true);
+        spielerHealthBar.setPreferredSize(new Dimension(180,20));
+        spielerProgressPanel.add(spielerHealthBar);
+
+        spielerExpBar = new JProgressBar(0,100);
+        spielerExpBar.setFont(normalFont);
+        spielerExpBar.setStringPainted(true);
+        spielerExpBar.setPreferredSize(new Dimension(180,20));
+        spielerProgressPanel.add(spielerExpBar);
 
         ImageIcon einstellungIcon = new ImageIcon("res/Settings.png");
         optionenPanel = new JPanel();
@@ -331,17 +336,6 @@ public class Main {
         skillBtnPanel.add(skillBtn5);
         //endregion
         //region Spielerstats
-        spielerName = "";
-        spielerMaxHp = 0;
-        spielerHp = spielerMaxHp;
-        spielerMaxMp = 0;
-        spielerMp = spielerMaxMp;
-        spielerAtk = 0;
-        spielerDef = 0;
-        spielerExp = 0;
-        spielerLvl = 1;
-
-
         statFont = new Font("Segoe UI",Font.BOLD,15);
         statSpielerName = new JLabel(spielerName);
         statSpielerHpLbl = new JLabel("HP");
@@ -421,26 +415,6 @@ public class Main {
 
  //       spielerStatsPanel.add(statPanel);
         //endregion
-        //region AuswahlBtn
-        ausahlBtn1 = new JButton("Auswahl 1");
-        ausahlBtn2 = new JButton("Auswahl 2");
-        ausahlBtn3 = new JButton("Auswahl 3");
-        ausahlBtn4 = new JButton("Auswahl 4");
-        ausahlBtn5 = new JButton("Auswahl 5");
-
-        ausahlBtn1.setFont(normalFont);
-        ausahlBtn2.setFont(normalFont);
-        ausahlBtn3.setFont(normalFont);
-        ausahlBtn4.setFont(normalFont);
-        ausahlBtn5.setFont(normalFont);
-
-        auswahlBtnPanel.setLayout(new GridLayout(5,1));
-        auswahlBtnPanel.add(ausahlBtn1);
-        auswahlBtnPanel.add(ausahlBtn2);
-        auswahlBtnPanel.add(ausahlBtn3);
-        auswahlBtnPanel.add(ausahlBtn4);
-        auswahlBtnPanel.add(ausahlBtn5);
-        //endregion
         //region GegnerPanel
         spielGegnerHpLbl = new JLabel("HP");
         spielGegnerHp = new JLabel(gegnerHp+"/"+gegnerMaxHp);
@@ -457,22 +431,52 @@ public class Main {
 
         logBtn.addActionListener(e -> logFrame.setVisible(true));
 
-        titelPanel.setVisible(false);
-        titelStartBtnPanel.setVisible(false);
+        auswahlPanel.setVisible(false);
         textAreaPanel.add(mainTextLbl);
+        updateSpielerStats();
         con.add(spielerStatsPanel);
         con.add(spielPanel);
         con.add(skillBtnPanel);
         con.add(textAreaPanel);
-        con.add(auswahlBtnPanel);
+        con.add(spielerProgressPanel);
         con.add(optionenPanel);
+        con.setVisible(true);
+        con.revalidate();
+        con.repaint();
+    }
+
+    public static void charakterAuswahl(){
+        auswahlPanel = new JPanel();
+        auswahlPanel.setBounds(20,20,745,515);
+        auswahlPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+
+        auswahlKriegerBtn = new JButton("Krieger");
+        auswahlKriegerBtn.setFont(normalFont);
+
+        auswahlKriegerBtn.addActionListener(e -> {
+            spielerName = Spieler.krieger.name;
+            spielerMaxHp = Spieler.krieger.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.krieger.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.krieger.atk;
+            spielerDef = Spieler.krieger.defend();
+            spielerExp = Spieler.krieger.exp;
+            spielerLvl = Spieler.krieger.lvl;
+            spielFenster();
+        });
+
+        auswahlPanel.add(auswahlKriegerBtn);
+        titelPanel.setVisible(false);
+        titelStartBtnPanel.setVisible(false);
+        con.add(auswahlPanel);
         con.setVisible(true);
         con.revalidate();
         con.repaint();
     }
     public static class TitleScreenHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            spielFenster();
+            charakterAuswahl();
             adminFenster();
         }
     }
