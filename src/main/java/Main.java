@@ -19,14 +19,15 @@ public class Main {
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
             skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5,
             ausahlBtn1, ausahlBtn2, ausahlBtn3, ausahlBtn4, ausahlBtn5, adminBtn6,
-            adminBtn7;
+            adminBtn7, adminBtn8, adminBtn9;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont;
     static Spieler spieler;
-    static String gegnerName;
-    static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl, i;
-    static double gegnerExp;
+    static String gegnerName, spielerName;
+    static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl,
+                spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl;
+    static double gegnerExp, spielerExp;
     static SpringLayout layout = new SpringLayout();
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
@@ -47,7 +48,7 @@ public class Main {
         titelPanel = new JPanel();
         titelPanel.setBounds(100,50,600,250);
         titelPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
-        titelLbl = new JLabel("dahdahad");
+        titelLbl = new JLabel("gfdfhrtd");
         titelLbl.setForeground(Color.WHITE);
         titelLbl.setFont(titelFont);
         titelPanel.add(titelLbl);
@@ -114,7 +115,7 @@ public class Main {
         adminPanel = new JPanel();
         conAdmin = new Container();
 
-        //region admin Buttttons
+        //region admin Buttons
         adminBtn1 = new JButton("MainText set");
         adminBtn2 = new JButton("MainText app");
         adminBtn3 = new JButton("Exp");
@@ -122,6 +123,8 @@ public class Main {
         adminBtn5 = new JButton("Heal");
         adminBtn6 = new JButton("Zombie");
         adminBtn7 = new JButton("Kampf");
+        adminBtn8 = new JButton("Krieger");
+        adminBtn9 = new JButton("Zauberer");
 
         adminPanel.add(adminBtn1);
         adminPanel.add(adminBtn2);
@@ -130,6 +133,8 @@ public class Main {
         adminPanel.add(adminBtn5);
         adminPanel.add(adminBtn6);
         adminPanel.add(adminBtn7);
+        adminPanel.add(adminBtn8);
+        adminPanel.add(adminBtn9);
         //endregion
 
         adminBtn1.addActionListener(e -> logTextArea.setText(""));
@@ -138,19 +143,20 @@ public class Main {
             logTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
         });
         adminBtn3.addActionListener(e -> {
-            spieler.exp = spieler.exp + 10.0;
+            spielerExp = spielerExp + 10.0;
             updateSpielerStats();
         });
         adminBtn4.addActionListener(e -> {
-            spieler.hp -= 5;
+            spielerHp -= 5;
             updateSpielerStats();
         });
         adminBtn5.addActionListener(e -> {
-            spieler.hp += 5;
+            spielerHp += 5;
             updateSpielerStats();
         });
         adminBtn6.addActionListener(e -> {
-            Gegner.zombie.lvl = 2;
+            Gegner.zombie.lvl = 1;
+            gegnerLvl = Gegner.zombie.lvl;
             gegnerName = Gegner.zombie.name;
             gegnerMaxHp = Gegner.zombie.maxHp*Gegner.zombie.lvl;
             gegnerHp = gegnerMaxHp;
@@ -163,7 +169,32 @@ public class Main {
         });
         adminBtn7.addActionListener(e -> {
             kampf();
-            System.out.println(gegnerHp);
+        });
+
+        adminBtn8.addActionListener(e -> {
+            spielerName = Spieler.krieger.name;
+            spielerMaxHp = Spieler.krieger.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.krieger.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.krieger.attack();
+            spielerDef = Spieler.krieger.defend();
+            spielerExp = Spieler.krieger.exp;
+            spielerLvl = Spieler.krieger.lvl;
+            updateSpielerStats();
+        });
+
+        adminBtn9.addActionListener(e -> {
+            spielerName = Spieler.zauberer.name;
+            spielerMaxHp = Spieler.zauberer.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.zauberer.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.zauberer.attack();
+            spielerDef = Spieler.zauberer.defend();
+            spielerExp = Spieler.zauberer.exp;
+            spielerLvl = Spieler.zauberer.lvl;
+            updateSpielerStats();
         });
 
         conAdmin = adminFrame.getContentPane();
@@ -174,49 +205,65 @@ public class Main {
         adminFrame.setVisible(true);
     }
     public static void updateSpielerStats(){
-        if (spieler.exp>99.9999999999){
-            spieler.lvl++;
-            spieler.exp = 0;
+        if (spielerExp>99.9999999999){
+            spielerLvl++;
+            spielerExp = 0;
 
-            statSpielerLvl.setText(""+spieler.lvl);
-            spieler.maxHp *= spieler.lvl;
-            spieler.hp = spieler.maxHp;
-            spieler.maxMp *= spieler.lvl;
-            spieler.mp = spieler.maxMp;
-            statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spieler.exp)+"%"));
-            spieler.atk *= spieler.lvl;
-            spieler.def *= spieler.lvl;
+            statSpielerLvl.setText(""+spielerLvl);
+            spielerMaxHp *= spielerLvl;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp *= spielerLvl;
+            spielerMp = spielerMaxMp;
+            statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spielerExp)+"%"));
+            spielerAtk *= spielerLvl;
+            spielerDef *= spielerLvl;
             updateSpielerStats();
         }
-        statSpielerExp.setText(String.format(Locale.US,"%.2f",spieler.exp)+"%");
-        statSpielerLvl.setText(""+spieler.lvl);
-        statSpielerHp.setText(spieler.hp+"/"+spieler.maxHp);
-        statSpielerMp.setText(spieler.mp+"/"+spieler.maxMp);
-        statSpielerAtk.setText(""+spieler.atk);
-        statSpielerDef.setText(""+spieler.def);
+        statSpielerName.setText(spielerName);
+        statSpielerExp.setText(String.format(Locale.US,"%.2f",spielerExp)+"%");
+        statSpielerLvl.setText(""+spielerLvl);
+        statSpielerHp.setText(spielerHp+"/"+spielerMaxHp);
+        statSpielerMp.setText(spielerMp+"/"+spielerMaxMp);
+        statSpielerAtk.setText(""+spielerAtk);
+        statSpielerDef.setText(""+spielerDef);
     }
     public static void updateGegnerHp(){
+        spielGegnerLvl.setText(""+gegnerLvl);
         spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxHp);
     }
     public static void kampf(){
-        int angriff = spieler.attack() - gegnerDef;
-        int schaden = gegnerAtk - spieler.defend();
+        int angriff = spielerAtk - gegnerDef;
+        int schaden = gegnerAtk - spielerDef;
 
-        if(spieler.amLeben()&&(gegnerHp > 0)){
+        if (angriff <= 0){
+            angriff = 0;
+        }
+        if (schaden <= 0){
+            schaden = 0;
+        }
+
+        if((spielerHp > 0) && (gegnerHp > 0)){
             gegnerHp -= angriff;
-            logTextArea.append("\n"+spieler.name+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
-            mainTextLbl.setText("<html>"+spieler.name+" verursacht "+angriff+" Schaden an "+gegnerName+"!");
+            logTextArea.append("\n"+spielerName+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
+            mainTextLbl.setText("<html>"+spielerName+" verursacht "+angriff+" Schaden an "+gegnerName+"!");
             if (gegnerHp > 0) {
-                spieler.hp -= schaden;
-                logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
-                mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spieler.name+"!");
+                spielerHp -= schaden;
+                logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+                mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+                if (spielerHp <= 0){
+                    spielerHp = 0;
+                    logTextArea.append("\nGestorben...");
+                    mainTextLbl.setText(mainTextLbl.getText()+"<br>Gestorben...!");
+                }
             } else{
-                logTextArea.append("\nGewonnen!\n"+spieler.exp+" Erfahrungspunkte erhalten.");
-                mainTextLbl.setText(mainTextLbl.getText()+"<br>Gewonnen!<br>"+spieler.exp+" Erfahrungspunkte erhalten.");
-                spieler.exp += gegnerExp;
+                gegnerHp = 0;
+                logTextArea.append("\nGewonnen!\n"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
+                mainTextLbl.setText(mainTextLbl.getText()+"<br>Gewonnen!<br>"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
+                spielerExp += gegnerExp;
                 updateSpielerStats();
             }
         }
+
         updateSpielerStats();
         updateGegnerHp();
     }
@@ -284,21 +331,31 @@ public class Main {
         skillBtnPanel.add(skillBtn5);
         //endregion
         //region Spielerstats
-        spieler = new Spieler("Test",20, 10, 5, 5, 0, 1);
+        spielerName = "";
+        spielerMaxHp = 0;
+        spielerHp = spielerMaxHp;
+        spielerMaxMp = 0;
+        spielerMp = spielerMaxMp;
+        spielerAtk = 0;
+        spielerDef = 0;
+        spielerExp = 0;
+        spielerLvl = 1;
+
+
         statFont = new Font("Segoe UI",Font.BOLD,15);
-        statSpielerName = new JLabel(spieler.name);
+        statSpielerName = new JLabel(spielerName);
         statSpielerHpLbl = new JLabel("HP");
-        statSpielerHp = new JLabel(spieler.hp+"/"+spieler.maxHp);
+        statSpielerHp = new JLabel(spielerHp+"/"+spielerMaxHp);
         statSpielerLvlLbl = new JLabel("Level");
-        statSpielerLvl = new JLabel(""+spieler.lvl);
+        statSpielerLvl = new JLabel(""+spielerLvl);
         statSpielerMpLbl = new JLabel("MP");
-        statSpielerMp = new JLabel(spieler.mp+"/"+spieler.maxMp);
+        statSpielerMp = new JLabel(spielerMp+"/"+spielerMaxMp);
         statSpielerExpLbl = new JLabel("EXP");
-        statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spieler.exp)+"%");
+        statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spielerExp)+"%");
         statSpielerAtkLbl = new JLabel("Angriff");
-        statSpielerAtk = new JLabel(""+spieler.atk);
+        statSpielerAtk = new JLabel(""+spielerAtk);
         statSpielerDefLbl = new JLabel("Verteidigung");
-        statSpielerDef = new JLabel(""+spieler.def);
+        statSpielerDef = new JLabel(""+spielerDef);
 
         statSpielerName.setFont(statFont);
         statSpielerHpLbl.setFont(statFont);
