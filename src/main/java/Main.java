@@ -9,23 +9,26 @@ import java.util.Locale;
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
-            textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel, logPanel,
-            logBtnPanel, adminPanel, auswahlPanel;
+            textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel, logPanel, vorschauStatsPanel,
+            logBtnPanel, adminPanel, auswahlPanelLinks, vorschauPanel, auswahlPanelRechts, gegnerInfoPanel;
     private static JTextArea logTextArea;
     private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp, mainTextLbl,
             statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
-            statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHpLbl, spielGegnerHp,
-            spielGegnerLvlLbl, spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl;
+            statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHp,
+            spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl, vorschauLbl,
+            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl;
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
             skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5, adminBtn6,
-            adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn;
+            adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn, auswahlMagierBtn, auswahlJaegerBtn,
+            auswahlPriesterBtn, auswahlBtn, adminBtn10;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
-    private static JProgressBar spielerHealthBar, spielerExpBar;
-    static Font titelFont, normalFont, startBtnFont, statFont, textFont;
+    private static JProgressBar spielerHealthBar, spielerExpBar, gegnerHealthBar;
+    static Font titelFont, normalFont, startBtnFont, statFont, textFont, vorschauFont, barFont;
     static String gegnerName, spielerName;
     static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl,
-                spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl;
+                spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl,
+            spielerStr, spielerDex, spielerKno, spielerWis;
     static double gegnerExp, spielerExp;
     static SpringLayout layout = new SpringLayout();
 
@@ -41,8 +44,9 @@ public class Main {
         mainFrame.setPreferredSize(new Dimension(800,600));
         titelFont = new Font("Times New Roman", Font.BOLD, 90);
         startBtnFont = new Font("Segoe UI", Font.BOLD,30);
-        normalFont = new Font("Segoe UI", Font.BOLD,25);
+        normalFont = new Font("Segoe UI", Font.BOLD,22);
         textFont = new Font("Segoe UI",Font.BOLD,15);
+        barFont = new Font("Segoe UI", Font.BOLD,18);
 
         titelPanel = new JPanel();
         titelPanel.setBounds(100,50,600,250);
@@ -120,10 +124,11 @@ public class Main {
         adminBtn3 = new JButton("Exp");
         adminBtn4 = new JButton("DMG");
         adminBtn5 = new JButton("Heal");
-        adminBtn6 = new JButton("Zombie");
+        adminBtn6 = new JButton("Schneemann");
         adminBtn7 = new JButton("Kampf");
-        adminBtn8 = new JButton("Krieger");
-        adminBtn9 = new JButton("Zauberer");
+        adminBtn8 = new JButton("Fledermaus");
+        adminBtn9 = new JButton("Oger");
+        adminBtn10 = new JButton("Geist");
 
         adminPanel.add(adminBtn1);
         adminPanel.add(adminBtn2);
@@ -134,6 +139,7 @@ public class Main {
         adminPanel.add(adminBtn7);
         adminPanel.add(adminBtn8);
         adminPanel.add(adminBtn9);
+        adminPanel.add(adminBtn10);
         //endregion
 
         adminBtn1.addActionListener(e -> logTextArea.setText(""));
@@ -154,37 +160,82 @@ public class Main {
             updateSpielerStats();
         });
         adminBtn6.addActionListener(e -> {
-            Gegner.zombie.lvl = 1;
-            gegnerLvl = Gegner.zombie.lvl;
-            gegnerName = Gegner.zombie.name;
-            gegnerMaxHp = Gegner.zombie.maxHp*Gegner.zombie.lvl;
+            Gegner.schneemann.lvl = 1;
+            gegnerLvl = Gegner.schneemann.lvl;
+            gegnerName = Gegner.schneemann.name;
+            gegnerMaxHp = Gegner.schneemann.maxHp*Gegner.schneemann.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.zombie.maxMp*Gegner.zombie.lvl;
+            gegnerMaxMp = Gegner.schneemann.maxMp*Gegner.schneemann.lvl;
             gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.zombie.attack()*Gegner.zombie.lvl;
-            gegnerDef = Gegner.zombie.defend()*Gegner.zombie.lvl;
-            gegnerExp = Gegner.zombie.exp;
+            gegnerAtk = Gegner.schneemann.attack()*Gegner.schneemann.lvl;
+            gegnerDef = Gegner.schneemann.defend()*Gegner.schneemann.lvl;
+            gegnerExp = Gegner.schneemann.exp;
             updateGegnerHp();
+            gegnerHealthBar.setMaximum(gegnerMaxHp);
+            gegnerInfoPanel.setVisible(true);
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Schneemann.png");
+            gegnerBildLbl.setVisible(true);
+            gegnerBildLbl.setIcon(gegnerBild);
         });
         adminBtn7.addActionListener(e -> {
             kampf();
         });
 
         adminBtn8.addActionListener(e -> {
-
+            Gegner.fledermaus.lvl = 1;
+            gegnerLvl = Gegner.fledermaus.lvl;
+            gegnerName = Gegner.fledermaus.name;
+            gegnerMaxHp = Gegner.fledermaus.maxHp*Gegner.fledermaus.lvl;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = Gegner.fledermaus.maxMp*Gegner.fledermaus.lvl;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = Gegner.fledermaus.attack()*Gegner.fledermaus.lvl;
+            gegnerDef = Gegner.fledermaus.defend()*Gegner.fledermaus.lvl;
+            gegnerExp = Gegner.fledermaus.exp;
+            updateGegnerHp();
+            gegnerHealthBar.setMaximum(gegnerMaxHp);
+            gegnerInfoPanel.setVisible(true);
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Fledermaus.png");
+            gegnerBildLbl.setVisible(true);
+            gegnerBildLbl.setIcon(gegnerBild);
         });
 
         adminBtn9.addActionListener(e -> {
-            spielerName = Spieler.zauberer.name;
-            spielerMaxHp = Spieler.zauberer.maxHp;
-            spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.zauberer.maxMp;
-            spielerMp = spielerMaxMp;
-            spielerAtk = Spieler.zauberer.attack();
-            spielerDef = Spieler.zauberer.defend();
-            spielerExp = Spieler.zauberer.exp;
-            spielerLvl = Spieler.zauberer.lvl;
-            updateSpielerStats();
+            Gegner.oger.lvl = 1;
+            gegnerLvl = Gegner.oger.lvl;
+            gegnerName = Gegner.oger.name;
+            gegnerMaxHp = Gegner.oger.maxHp*Gegner.oger.lvl;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = Gegner.oger.maxMp*Gegner.oger.lvl;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = Gegner.oger.attack()*Gegner.oger.lvl;
+            gegnerDef = Gegner.oger.defend()*Gegner.oger.lvl;
+            gegnerExp = Gegner.oger.exp;
+            updateGegnerHp();
+            gegnerHealthBar.setMaximum(gegnerMaxHp);
+            gegnerInfoPanel.setVisible(true);
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Oger.png");
+            gegnerBildLbl.setVisible(true);
+            gegnerBildLbl.setIcon(gegnerBild);
+        });
+
+        adminBtn10.addActionListener(e -> {
+            Gegner.geist.lvl = 1;
+            gegnerLvl = Gegner.geist.lvl;
+            gegnerName = Gegner.geist.name;
+            gegnerMaxHp = Gegner.geist.maxHp*Gegner.geist.lvl;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = Gegner.geist.maxMp*Gegner.geist.lvl;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = Gegner.geist.attack()*Gegner.geist.lvl;
+            gegnerDef = Gegner.geist.defend()*Gegner.geist.lvl;
+            gegnerExp = Gegner.geist.exp;
+            updateGegnerHp();
+            gegnerHealthBar.setMaximum(gegnerMaxHp);
+            gegnerInfoPanel.setVisible(true);
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Geist.png");
+            gegnerBildLbl.setVisible(true);
+            gegnerBildLbl.setIcon(gegnerBild);
         });
 
         conAdmin = adminFrame.getContentPane();
@@ -205,8 +256,9 @@ public class Main {
             spielerMaxMp *= spielerLvl;
             spielerMp = spielerMaxMp;
             statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spielerExp)+"%"));
-            spielerAtk = spielerLvl;
-            spielerDef = spielerLvl;
+            spielerAtk *= spielerLvl;
+            spielerDef *= spielerLvl;
+            spielerHealthBar.setMaximum(spielerMaxHp);
             updateSpielerStats();
         }
         statSpielerName.setText(spielerName);
@@ -220,8 +272,10 @@ public class Main {
         spielerExpBar.setValue((int)spielerExp);
     }
     public static void updateGegnerHp(){
-        spielGegnerLvl.setText(""+gegnerLvl);
-        spielGegnerHp.setText(gegnerHp+"/"+gegnerMaxHp);
+        spielGegnerName.setText(gegnerName);
+        spielGegnerLvl.setText("Level: "+gegnerLvl);
+        spielGegnerHp.setText("HP: "+gegnerHp+"/"+gegnerMaxHp);
+        gegnerHealthBar.setValue(gegnerHp);
     }
     public static void kampf(){
         int angriff = spielerAtk - gegnerDef;
@@ -253,6 +307,8 @@ public class Main {
                 logTextArea.append("\nGewonnen!\n"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
                 mainTextLbl.setText(mainTextLbl.getText()+"<br>Gewonnen!<br>"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
                 spielerExp += gegnerExp;
+                gegnerBildLbl.setVisible(false);
+                gegnerInfoPanel.setVisible(false);
                 updateSpielerStats();
             }
         }
@@ -287,14 +343,16 @@ public class Main {
         spielerProgressPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
         spielerHealthBar = new JProgressBar(0,spielerMaxHp);
-        spielerHealthBar.setFont(normalFont);
+        spielerHealthBar.setFont(barFont);
         spielerHealthBar.setStringPainted(true);
+        spielerHealthBar.setForeground(new Color(128,0,0));
         spielerHealthBar.setPreferredSize(new Dimension(180,20));
         spielerProgressPanel.add(spielerHealthBar);
 
         spielerExpBar = new JProgressBar(0,100);
-        spielerExpBar.setFont(normalFont);
+        spielerExpBar.setFont(barFont);
         spielerExpBar.setStringPainted(true);
+        spielerExpBar.setForeground(new Color(192,129,0));
         spielerExpBar.setPreferredSize(new Dimension(180,20));
         spielerProgressPanel.add(spielerExpBar);
 
@@ -309,7 +367,6 @@ public class Main {
         optionenPanel.add(Box.createHorizontalGlue());
         optionenPanel.add(logBtn);
         //endregion
-
         //region Skillbuttons
         skillBtn1 = new JButton("Skill1");
         skillBtn2 = new JButton("Skill2");
@@ -412,26 +469,57 @@ public class Main {
         spielerStatsPanel.add(statSpielerAtk);
         spielerStatsPanel.add(statSpielerDefLbl);
         spielerStatsPanel.add(statSpielerDef);
-
- //       spielerStatsPanel.add(statPanel);
         //endregion
         //region GegnerPanel
-        spielGegnerHpLbl = new JLabel("HP");
-        spielGegnerHp = new JLabel(gegnerHp+"/"+gegnerMaxHp);
+        SpringLayout layoutGegner = new SpringLayout();
+        SpringLayout layoutGegnerInfo = new SpringLayout();
+        spielGegnerHp = new JLabel("HP: "+gegnerHp+"/"+gegnerMaxHp);
         spielGegnerName = new JLabel(gegnerName);
-        spielGegnerLvlLbl = new JLabel("Level");
-        spielGegnerLvl = new JLabel(""+gegnerLvl);
+        spielGegnerLvl = new JLabel("Level: "+gegnerLvl);
+        gegnerBildLbl = new JLabel();
+        spielPanel.setLayout(layoutGegner);
+        spielGegnerName.setFont(barFont);
 
-        spielPanel.add(spielGegnerHpLbl);
-        spielPanel.add(spielGegnerHp);
-        spielPanel.add(spielGegnerName);
-        spielPanel.add(spielGegnerLvlLbl);
-        spielPanel.add(spielGegnerLvl);
+        gegnerInfoPanel = new JPanel();
+        gegnerInfoPanel.setVisible(false);
+        gegnerInfoPanel.setPreferredSize(new Dimension(200,70));
+        gegnerInfoPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,1,true));
+        gegnerInfoPanel.setLayout(layoutGegnerInfo);
+
+        gegnerHealthBar = new JProgressBar();
+        gegnerHealthBar.setValue(gegnerHp);
+        gegnerHealthBar.setFont(barFont);
+        gegnerHealthBar.setStringPainted(true);
+        gegnerHealthBar.setForeground(new Color(128,0,0));
+        gegnerHealthBar.setPreferredSize(new Dimension(180,15));
+
+        layoutGegner.putConstraint(SpringLayout.EAST,gegnerInfoPanel,0,SpringLayout.EAST,spielPanel);
+        layoutGegnerInfo.putConstraint(SpringLayout.HORIZONTAL_CENTER,gegnerHealthBar,0,SpringLayout.HORIZONTAL_CENTER,gegnerInfoPanel);
+        layoutGegnerInfo.putConstraint(SpringLayout.VERTICAL_CENTER,gegnerHealthBar,20,SpringLayout.VERTICAL_CENTER,gegnerInfoPanel);
+
+        layoutGegnerInfo.putConstraint(SpringLayout.HORIZONTAL_CENTER, spielGegnerName,0,SpringLayout.HORIZONTAL_CENTER,gegnerInfoPanel);
+        layoutGegnerInfo.putConstraint(SpringLayout.VERTICAL_CENTER,spielGegnerName,-20,SpringLayout.VERTICAL_CENTER,gegnerInfoPanel);
+
+        layoutGegnerInfo.putConstraint(SpringLayout.WEST,spielGegnerHp,10,SpringLayout.WEST,gegnerInfoPanel);
+        layoutGegnerInfo.putConstraint(SpringLayout.VERTICAL_CENTER, spielGegnerHp,0,SpringLayout.VERTICAL_CENTER,gegnerInfoPanel);
+
+        layoutGegnerInfo.putConstraint(SpringLayout.EAST, spielGegnerLvl, -10,SpringLayout.EAST, gegnerInfoPanel);
+        layoutGegnerInfo.putConstraint(SpringLayout.VERTICAL_CENTER, spielGegnerLvl,0,SpringLayout.VERTICAL_CENTER,gegnerInfoPanel);
+
+        gegnerInfoPanel.add(spielGegnerName);
+        gegnerInfoPanel.add(spielGegnerHp);
+        gegnerInfoPanel.add(spielGegnerLvl);
+        gegnerInfoPanel.add(gegnerHealthBar);
+        spielPanel.add(gegnerInfoPanel);
+        spielPanel.add(gegnerBildLbl);
         //endregion
 
         logBtn.addActionListener(e -> logFrame.setVisible(true));
 
-        auswahlPanel.setVisible(false);
+        auswahlPanelLinks.setVisible(false);
+        vorschauPanel.setVisible(false);
+        auswahlPanelRechts.setVisible(false);
+        auswahlBtn.setVisible(false);
         textAreaPanel.add(mainTextLbl);
         updateSpielerStats();
         con.add(spielerStatsPanel);
@@ -444,13 +532,62 @@ public class Main {
         con.revalidate();
         con.repaint();
     }
-
     public static void charakterAuswahl(){
-        auswahlPanel = new JPanel();
-        auswahlPanel.setBounds(20,20,745,515);
-        auswahlPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        //region layout
+        auswahlPanelLinks = new JPanel();
+        auswahlPanelLinks.setBounds(20,20,225,515);
+        auswahlPanelLinks.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        auswahlPanelLinks.setLayout(new GridLayout(10,2));
 
+        auswahlPanelRechts = new JPanel();
+        auswahlPanelRechts.setBounds(540,20,225,515);
+        auswahlPanelRechts.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        auswahlPanelRechts.setLayout(new GridLayout(10,2));
+        //endregion
+        //region Vorschau
+        SpringLayout layout = new SpringLayout();
+        SpringLayout layoutStats = new SpringLayout();
+        vorschauPanel = new JPanel();
+        vorschauPanel.setBounds(250,28,285,500);
+        vorschauPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        vorschauPanel.setLayout(layout);
+
+        vorschauStatsPanel = new JPanel();
+        vorschauStatsPanel.setPreferredSize(new Dimension(281,150));
+        vorschauStatsPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,1, true));
+        layout.putConstraint(SpringLayout.NORTH, vorschauStatsPanel, -150, SpringLayout.SOUTH, vorschauPanel);
+        vorschauStatsPanel.setLayout(layoutStats);
+
+        auswahlBtn = new JButton("Auswahl");
+        auswahlBtn.setFont(normalFont);
+        auswahlBtn.setBounds(318,500,150,50);
+        auswahlBtn.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+
+        vorschauStatsName = new JLabel();
+        vorschauStatsName.setFont(normalFont);
+
+        vorschauLbl = new JLabel();
+        vorschauStatsLblLinks = new JLabel();
+        vorschauFont = new Font("Segoe UI",Font.BOLD,14);
+        vorschauStatsLblLinks.setFont(vorschauFont);
+
+        vorschauStatsLblRechts = new JLabel();
+        vorschauStatsLblRechts.setFont(vorschauFont);
+        layoutStats.putConstraint(SpringLayout.WEST,vorschauStatsLblLinks,50,SpringLayout.WEST,vorschauStatsPanel);
+        layoutStats.putConstraint(SpringLayout.NORTH,vorschauStatsLblLinks,30,SpringLayout.NORTH,vorschauStatsPanel);
+        layoutStats.putConstraint(SpringLayout.WEST,vorschauStatsLblRechts,170,SpringLayout.WEST,vorschauStatsPanel);
+        layoutStats.putConstraint(SpringLayout.NORTH,vorschauStatsLblRechts,30,SpringLayout.NORTH,vorschauStatsPanel);
+        layoutStats.putConstraint(SpringLayout.HORIZONTAL_CENTER,vorschauStatsName,0,SpringLayout.HORIZONTAL_CENTER,vorschauStatsPanel);
+
+        auswahlBtn.addActionListener(e -> {
+            spielFenster();
+        });
+        //endregion
+        //region buttons
         auswahlKriegerBtn = new JButton("Krieger");
+        auswahlJaegerBtn = new JButton("Jäger");
+        auswahlMagierBtn = new JButton("Magier");
+        auswahlPriesterBtn = new JButton("Priester");
         auswahlKriegerBtn.setFont(normalFont);
 
         auswahlKriegerBtn.addActionListener(e -> {
@@ -459,17 +596,114 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxMp = Spieler.krieger.maxMp;
             spielerMp = spielerMaxMp;
-            spielerAtk = Spieler.krieger.atk;
-            spielerDef = Spieler.krieger.defend();
+            spielerAtk = Spieler.krieger.atk+Spieler.krieger.str;
+            spielerDef = Spieler.krieger.def;
             spielerExp = Spieler.krieger.exp;
             spielerLvl = Spieler.krieger.lvl;
-            spielFenster();
+            spielerStr = Spieler.krieger.str;
+            spielerDex = Spieler.krieger.dex;
+            spielerKno = Spieler.krieger.kno;
+            spielerWis = Spieler.krieger.wis;
+            ImageIcon vorschauBild = new ImageIcon("res/Spieler/Krieger.png");
+            vorschauLbl.setIcon(vorschauBild);
+            vorschauStatsName.setText(spielerName);
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
+                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
+                    "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
+                    spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
+            con.repaint();
+        });
+        auswahlJaegerBtn.addActionListener(e -> {
+            spielerName = Spieler.jaeger.name;
+            spielerMaxHp = Spieler.jaeger.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.jaeger.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.jaeger.atk+Spieler.jaeger.dex;
+            spielerDef = Spieler.jaeger.def;
+            spielerExp = Spieler.jaeger.exp;
+            spielerLvl = Spieler.jaeger.lvl;
+            spielerStr = Spieler.jaeger.str;
+            spielerDex = Spieler.jaeger.dex;
+            spielerKno = Spieler.jaeger.kno;
+            spielerWis = Spieler.jaeger.wis;
+            ImageIcon vorschauBild = new ImageIcon("res/Spieler/Jaeger.png");
+            vorschauLbl.setIcon(vorschauBild);
+            vorschauStatsName.setText(spielerName);
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
+                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
+                    "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
+                    spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
+            con.repaint();
+        });
+        auswahlMagierBtn.addActionListener(e -> {
+            spielerName = Spieler.magier.name;
+            spielerMaxHp = Spieler.magier.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.magier.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.magier.atk+Spieler.magier.kno;
+            spielerDef = Spieler.magier.def;
+            spielerExp = Spieler.magier.exp;
+            spielerLvl = Spieler.magier.lvl;
+            spielerStr = Spieler.magier.str;
+            spielerDex = Spieler.magier.dex;
+            spielerKno = Spieler.magier.kno;
+            spielerWis = Spieler.magier.wis;
+            ImageIcon vorschauBild = new ImageIcon("res/Spieler/Magier.png");
+            vorschauLbl.setIcon(vorschauBild);
+            vorschauStatsName.setText(spielerName);
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
+                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
+                    "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
+                    spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
+            con.repaint();
+        });
+        auswahlPriesterBtn.addActionListener(e -> {
+            spielerName = Spieler.priester.name;
+            spielerMaxHp = Spieler.priester.maxHp;
+            spielerHp = spielerMaxHp;
+            spielerMaxMp = Spieler.priester.maxMp;
+            spielerMp = spielerMaxMp;
+            spielerAtk = Spieler.priester.atk+Spieler.priester.wis;
+            spielerDef = Spieler.priester.def;
+            spielerExp = Spieler.priester.exp;
+            spielerLvl = Spieler.priester.lvl;
+            spielerStr = Spieler.priester.str;
+            spielerDex = Spieler.priester.dex;
+            spielerKno = Spieler.priester.kno;
+            spielerWis = Spieler.priester.wis;
+            ImageIcon vorschauBild = new ImageIcon("res/Spieler/Priester.png");
+            vorschauLbl.setIcon(vorschauBild);
+            vorschauStatsName.setText(spielerName);
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
+                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
+                    "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
+                    spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
+            con.repaint();
         });
 
-        auswahlPanel.add(auswahlKriegerBtn);
+        auswahlPanelLinks.add(auswahlKriegerBtn);
+        auswahlPanelLinks.add(auswahlJaegerBtn);
+        auswahlPanelLinks.add(auswahlMagierBtn);
+        auswahlPanelLinks.add(auswahlPriesterBtn);
+        //endregion
+
         titelPanel.setVisible(false);
         titelStartBtnPanel.setVisible(false);
-        con.add(auswahlPanel);
+        vorschauStatsPanel.add(vorschauStatsName);
+        vorschauStatsPanel.add(vorschauStatsLblLinks);
+        vorschauStatsPanel.add(vorschauStatsLblRechts);
+        vorschauPanel.add(vorschauLbl);
+        vorschauPanel.add(vorschauStatsPanel);
+        con.add(auswahlBtn);
+        con.add(vorschauPanel);
+        con.add(auswahlPanelLinks);
+        con.add(auswahlPanelRechts);
         con.setVisible(true);
         con.revalidate();
         con.repaint();
