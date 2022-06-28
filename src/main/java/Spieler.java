@@ -14,9 +14,14 @@ public class Spieler extends Charaktere{
     static Spieler jaeger = new Spieler("Jäger", 15, 10,5,10,3,4,
             10,4,0,1);
     static Spieler magier = new Spieler("Zauberer", 10,20,2,3,10,7,
-            2,3,0,1);
+            10,3,0,1);
     static Spieler priester = new Spieler("Priester", 10,15,2,4,4,15,
             10,5,0,1);
+    static Spieler paladin = new Spieler("Paladin", 30,10,10,2,2,10,
+            10,15,0,1);
+    static Spieler ninja = new Spieler("Ninja", 10,10,2,15,9,4,
+            10,5,0,1);
+
 
     public int attack() {
         range = rnd.nextInt((atk-3),(atk+3));
