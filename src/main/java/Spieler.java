@@ -5,22 +5,22 @@ public class Spieler extends Charaktere{
     private Random rnd = new Random();
 
     public Spieler(String name, int maxHp, int maxMp, int str, int dex, int kno, int wis,
-                   int atk, int def, double exp, int lvl){
-        super(name, maxHp, maxMp, str, dex, kno, wis, atk, def, exp, lvl);
+                   int atk, int def, int vit, int lck, double exp, int lvl){
+        super(name, maxHp, maxMp, str, dex, kno, wis, atk, def, vit, lck, exp, lvl);
     }
 
     static Spieler krieger = new Spieler("Krieger",20,5,10,5,3,2,
-            10,10,0,1);
+            10,10,5,2,0,1);
     static Spieler jaeger = new Spieler("Jäger", 15, 10,5,10,3,4,
-            10,4,0,1);
+            10,4,3,5,0,1);
     static Spieler magier = new Spieler("Zauberer", 10,20,2,3,10,7,
-            10,3,0,1);
+            10,3,1,4,0,1);
     static Spieler priester = new Spieler("Priester", 10,15,2,4,4,15,
-            10,5,0,1);
+            10,5,2,3,0,1);
     static Spieler paladin = new Spieler("Paladin", 30,10,10,2,2,10,
-            10,15,0,1);
+            10,15,10,2,0,1);
     static Spieler ninja = new Spieler("Ninja", 10,10,2,15,9,4,
-            10,5,0,1);
+            10,5,0,2,7,1);
 
 
     public int attack() {

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
+import java.util.Random;
 
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
@@ -17,11 +18,14 @@ public class Main {
             statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
             statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHp,
             spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl, vorschauLbl,
-            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl;
+            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl,
+            naviLinksLbl, naviRechtsLbl, naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
+            naviRechtsRechtsLbl;
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
             skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5, adminBtn6,
             adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn, auswahlMagierBtn, auswahlJaegerBtn,
-            auswahlPriesterBtn, auswahlBtn, adminBtn10, auswahlPaladinBtn, auswahlNinjaBtn;
+            auswahlPriesterBtn, auswahlBtn, adminBtn10, auswahlPaladinBtn, auswahlNinjaBtn,
+            adminBtn11, adminBtn12;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
     private static JProgressBar spielerHealthBar, spielerExpBar, gegnerHealthBar;
@@ -33,12 +37,13 @@ public class Main {
     static double gegnerExp, spielerExp;
     static SpringLayout layout = new SpringLayout();
 
+    static Gegner[] gegnerListe = new Gegner[4];
+
     TitleScreenHandler tsHandler = new TitleScreenHandler();
 
     public static void main(String[] args){
         new Main();
     }
-
     public Main(){
         FlatDarculaLaf.setup();
         mainFrame = new JFrame("Grinder");
@@ -114,6 +119,12 @@ public class Main {
 
         titelStartBtn.addActionListener(tsHandler);
     }
+    public static void gegnerInitialisieren(){
+        gegnerListe[0] = Gegner.schneemann;
+        gegnerListe[1] = Gegner.oger;
+        gegnerListe[2] = Gegner.fledermaus;
+        gegnerListe[3] = Gegner.geist;
+    }
     public static void adminFenster(){
         adminFrame = new JFrame("Admin");
         adminPanel = new JPanel();
@@ -130,6 +141,8 @@ public class Main {
         adminBtn8 = new JButton("Fledermaus");
         adminBtn9 = new JButton("Oger");
         adminBtn10 = new JButton("Geist");
+        adminBtn11 = new JButton("Skill1 ändern");
+        adminBtn12 = new JButton("Random Encounter");
 
         adminPanel.add(adminBtn1);
         adminPanel.add(adminBtn2);
@@ -141,6 +154,8 @@ public class Main {
         adminPanel.add(adminBtn8);
         adminPanel.add(adminBtn9);
         adminPanel.add(adminBtn10);
+        adminPanel.add(adminBtn11);
+        adminPanel.add(adminBtn12);
         //endregion
 
         adminBtn1.addActionListener(e -> logTextArea.setText(""));
@@ -171,8 +186,8 @@ public class Main {
             gegnerAtk = Gegner.schneemann.attack()*Gegner.schneemann.lvl;
             gegnerDef = Gegner.schneemann.defend()*Gegner.schneemann.lvl;
             gegnerExp = Gegner.schneemann.exp;
-            updateGegnerHp();
             gegnerHealthBar.setMaximum(gegnerMaxHp);
+            updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
             ImageIcon gegnerBild = new ImageIcon("res/Gegner/Schneemann.png");
             gegnerBildLbl.setVisible(true);
@@ -181,7 +196,6 @@ public class Main {
         adminBtn7.addActionListener(e -> {
             kampf();
         });
-
         adminBtn8.addActionListener(e -> {
             Gegner.fledermaus.lvl = 1;
             gegnerLvl = Gegner.fledermaus.lvl;
@@ -193,14 +207,13 @@ public class Main {
             gegnerAtk = Gegner.fledermaus.attack()*Gegner.fledermaus.lvl;
             gegnerDef = Gegner.fledermaus.defend()*Gegner.fledermaus.lvl;
             gegnerExp = Gegner.fledermaus.exp;
-            updateGegnerHp();
             gegnerHealthBar.setMaximum(gegnerMaxHp);
+            updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
             ImageIcon gegnerBild = new ImageIcon("res/Gegner/Bat.png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
-
         adminBtn9.addActionListener(e -> {
             Gegner.oger.lvl = 1;
             gegnerLvl = Gegner.oger.lvl;
@@ -212,14 +225,13 @@ public class Main {
             gegnerAtk = Gegner.oger.attack()*Gegner.oger.lvl;
             gegnerDef = Gegner.oger.defend()*Gegner.oger.lvl;
             gegnerExp = Gegner.oger.exp;
-            updateGegnerHp();
             gegnerHealthBar.setMaximum(gegnerMaxHp);
+            updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
             ImageIcon gegnerBild = new ImageIcon("res/Gegner/Ogre.png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
-
         adminBtn10.addActionListener(e -> {
             Gegner.geist.lvl = 1;
             gegnerLvl = Gegner.geist.lvl;
@@ -231,10 +243,37 @@ public class Main {
             gegnerAtk = Gegner.geist.attack()*Gegner.geist.lvl;
             gegnerDef = Gegner.geist.defend()*Gegner.geist.lvl;
             gegnerExp = Gegner.geist.exp;
-            updateGegnerHp();
             gegnerHealthBar.setMaximum(gegnerMaxHp);
+            updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
             ImageIcon gegnerBild = new ImageIcon("res/Gegner/Ghost.png");
+            gegnerBildLbl.setVisible(true);
+            gegnerBildLbl.setIcon(gegnerBild);
+        });
+        adminBtn11.addActionListener(e -> {
+            skillBtn1.setIcon(Skills.hexerSkill27);
+            System.out.println(true);
+            skillBtn1.setToolTipText("<html><font color='#ff0000'>Skill 2</font><br>lklk<br>izztf");
+        });
+        adminBtn12.addActionListener(e -> {
+            Random rnd = new Random();
+            int i = rnd.nextInt(0,3);
+            gegnerName = gegnerListe[i].name;
+            updateGegnerHp();
+            Gegner.geist.lvl = 1;
+            gegnerLvl = gegnerListe[i].lvl;
+            gegnerName = gegnerListe[i].name;
+            gegnerMaxHp = gegnerListe[i].maxHp*gegnerListe[i].lvl;
+            gegnerHp = gegnerMaxHp;
+            gegnerMaxMp = gegnerListe[i].maxMp*gegnerListe[i].lvl;
+            gegnerMp = gegnerMaxMp;
+            gegnerAtk = gegnerListe[i].attack()*gegnerListe[i].lvl;
+            gegnerDef = gegnerListe[i].defend()*gegnerListe[i].lvl;
+            gegnerExp = gegnerListe[i].exp;
+            gegnerHealthBar.setMaximum(gegnerMaxHp);
+            updateGegnerHp();
+            gegnerInfoPanel.setVisible(true);
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/"+gegnerListe[i].name+".png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
@@ -331,7 +370,8 @@ public class Main {
         mainTextLbl.setFont(textFont);
 
         skillBtnPanel = new JPanel();
-        skillBtnPanel.setLayout(new GridLayout());
+        SpringLayout skillBtnLayout = new SpringLayout();
+        skillBtnPanel.setLayout(skillBtnLayout);
         skillBtnPanel.setBounds(20,480, 500,60);
         skillBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
@@ -339,23 +379,14 @@ public class Main {
         spielerStatsPanel.setBounds(550,90,215,230);
         spielerStatsPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
+        SpringLayout spielerProgressLayout = new SpringLayout();
         spielerProgressPanel = new JPanel();
         spielerProgressPanel.setBounds(550,330,215,210);
         spielerProgressPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        spielerProgressPanel.setLayout(spielerProgressLayout);
 
         spielerHealthBar = new JProgressBar(0,spielerMaxHp);
-        spielerHealthBar.setFont(barFont);
-        spielerHealthBar.setStringPainted(true);
-        spielerHealthBar.setForeground(new Color(128,0,0));
-        spielerHealthBar.setPreferredSize(new Dimension(180,20));
-        spielerProgressPanel.add(spielerHealthBar);
-
         spielerExpBar = new JProgressBar(0,100);
-        spielerExpBar.setFont(barFont);
-        spielerExpBar.setStringPainted(true);
-        spielerExpBar.setForeground(new Color(192,129,0));
-        spielerExpBar.setPreferredSize(new Dimension(180,20));
-        spielerProgressPanel.add(spielerExpBar);
 
         ImageIcon einstellungIcon = new ImageIcon("res/Settings.png");
         optionenPanel = new JPanel();
@@ -369,29 +400,70 @@ public class Main {
         optionenPanel.add(logBtn);
         //endregion
         //region Skillbuttons
-        skillBtn1 = new JButton("Skill1");
-        skillBtn2 = new JButton("Skill2");
-        skillBtn3 = new JButton("Skill3");
-        skillBtn4 = new JButton("Skill4");
-        skillBtn5 = new JButton("Skill5");
+        skillBtn1 = new JButton(Skills.hexerSkill1);
+        skillBtn2 = new JButton(Skills.hexerSkill2);
+        skillBtn3 = new JButton(Skills.hexerSkill3);
+        skillBtn4 = new JButton(Skills.hexerSkill4);
+        skillBtn5 = new JButton(Skills.hexerSkill5);
+//        skillBtn6 = new JButton(Skills.hexerSkill6);
+//        skillBtn7 = new JButton(Skills.hexerSkill7);
+//        skillBtn8 = new JButton(Skills.hexerSkill8);
 
-        skillBtn1.setFont(normalFont);
-        skillBtn2.setFont(normalFont);
-        skillBtn3.setFont(normalFont);
-        skillBtn4.setFont(normalFont);
-        skillBtn5.setFont(normalFont);
+        skillBtn1.setPreferredSize(new Dimension(50,50));
+        skillBtn2.setPreferredSize(new Dimension(50,50));
+        skillBtn3.setPreferredSize(new Dimension(50,50));
+        skillBtn4.setPreferredSize(new Dimension(50,50));
+        skillBtn5.setPreferredSize(new Dimension(50,50));
+//        skillBtn6.setPreferredSize(new Dimension(50,50));
+//        skillBtn7.setPreferredSize(new Dimension(50,50));
+//        skillBtn8.setPreferredSize(new Dimension(50,50));
 
-        skillBtn1.setForeground(Color.WHITE);
-        skillBtn2.setForeground(Color.WHITE);
-        skillBtn3.setForeground(Color.WHITE);
-        skillBtn4.setForeground(Color.WHITE);
-        skillBtn5.setForeground(Color.WHITE);
+        skillBtn1.setToolTipText("<html><font color='green'>Skill 1</font><br>lklk<br>izztf");
+        skillBtn5.setEnabled(false);
+        //region layout
+        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn1,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn2,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn3,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn4,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn5,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+//        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn6,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+//        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn7,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+//        skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn8,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
+
+        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn1,100,SpringLayout.WEST,skillBtnPanel);
+        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn2,10,SpringLayout.EAST,skillBtn1);
+        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn3,10,SpringLayout.EAST,skillBtn2);
+        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn4,10,SpringLayout.EAST,skillBtn3);
+        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn5,10,SpringLayout.EAST,skillBtn4);
+//        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn6,10,SpringLayout.EAST,skillBtn5);
+//        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn7,10,SpringLayout.EAST,skillBtn6);
+//        skillBtnLayout.putConstraint(SpringLayout.WEST,skillBtn8,10,SpringLayout.EAST,skillBtn7);
+        //endregion
+//        skillBtn1.setBorderPainted(false);
+//        skillBtn1.setContentAreaFilled(false);
+//        skillBtn1.setFocusPainted(false);
+//        skillBtn1.setOpaque(false);
+
+//        skillBtn1.setFont(normalFont);
+//        skillBtn2.setFont(normalFont);
+//        skillBtn3.setFont(normalFont);
+//        skillBtn4.setFont(normalFont);
+//        skillBtn5.setFont(normalFont);
+
+//        skillBtn1.setForeground(Color.WHITE);
+//        skillBtn2.setForeground(Color.WHITE);
+//        skillBtn3.setForeground(Color.WHITE);
+//        skillBtn4.setForeground(Color.WHITE);
+//        skillBtn5.setForeground(Color.WHITE);
 
         skillBtnPanel.add(skillBtn1);
         skillBtnPanel.add(skillBtn2);
         skillBtnPanel.add(skillBtn3);
         skillBtnPanel.add(skillBtn4);
         skillBtnPanel.add(skillBtn5);
+//        skillBtnPanel.add(skillBtn6);
+//        skillBtnPanel.add(skillBtn7);
+//        skillBtnPanel.add(skillBtn8);
         //endregion
         //region Spielerstats
         statFont = new Font("Segoe UI",Font.BOLD,15);
@@ -404,10 +476,20 @@ public class Main {
         statSpielerMp = new JLabel(spielerMp+"/"+spielerMaxMp);
         statSpielerExpLbl = new JLabel("EXP");
         statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spielerExp)+"%");
+
         statSpielerAtkLbl = new JLabel("Angriff");
         statSpielerAtk = new JLabel(""+spielerAtk);
         statSpielerDefLbl = new JLabel("Verteidigung");
         statSpielerDef = new JLabel(""+spielerDef);
+        JLabel statSpielerStrLbl = new JLabel("<html><font color='#ff0000'>Stärke");
+        JLabel statSpielerStr = new JLabel("" + spielerStr);
+        JLabel statSpielerDexLbl = new JLabel("<html><font color='#3cb371'>Geschick");
+        JLabel statSpielerDex = new JLabel("" + spielerDex);
+        JLabel statSpielerKnoLbl = new JLabel("<html><font color='#94d0ff'>Intelligenz");
+        JLabel statSpielerKno = new JLabel("" + spielerKno);
+        JLabel statSpielerWisLbl = new JLabel("<html><font color='#ffe400'>Weisheit");
+        JLabel statSpielerWis = new JLabel("" + spielerWis);
+
 
         statSpielerName.setFont(statFont);
         statSpielerHpLbl.setFont(statFont);
@@ -422,54 +504,105 @@ public class Main {
         statSpielerAtk.setFont(statFont);
         statSpielerDefLbl.setFont(statFont);
         statSpielerDef.setFont(statFont);
+        statSpielerStrLbl.setFont(statFont);
+        statSpielerStr.setFont(statFont);
+        statSpielerDexLbl.setFont(statFont);
+        statSpielerDex.setFont(statFont);
+        statSpielerKnoLbl.setFont(statFont);
+        statSpielerKno.setFont(statFont);
+        statSpielerWisLbl.setFont(statFont);
+        statSpielerWis.setFont(statFont);
+
+        spielerHealthBar.setFont(barFont);
+        spielerHealthBar.setStringPainted(true);
+        spielerHealthBar.setForeground(Color.decode("#C70039"));
+        spielerHealthBar.setPreferredSize(new Dimension(180,20));
+
+        spielerExpBar.setFont(barFont);
+        spielerExpBar.setStringPainted(true);
+        spielerExpBar.setForeground(new Color(192,129,0));
+        spielerExpBar.setPreferredSize(new Dimension(180,20));
 
         //layout links
-        layout.putConstraint(SpringLayout.WEST,statSpielerName,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,statSpielerName,0, SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statSpielerLvlLbl,20, SpringLayout.WEST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerHpLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerHealthBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerMpLbl,20, SpringLayout.WEST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerExpLbl,20, SpringLayout.WEST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.WEST,statSpielerAtkLbl,20, SpringLayout.WEST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.WEST,statSpielerDefLbl,20, SpringLayout.WEST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.WEST,statSpielerLvlLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerExpBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
 
-      //  layout.putConstraint(SpringLayout.NORTH,statSpielerName,20, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,20, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerHpLbl,50, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerMpLbl,80, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerExpLbl,110, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerAtkLbl,140, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerDefLbl,170, SpringLayout.NORTH,spielerStatsPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerAtkLbl,20, SpringLayout.WEST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerDefLbl,20, SpringLayout.WEST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerStrLbl, 20, SpringLayout.WEST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerDexLbl, 20, SpringLayout.WEST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerKnoLbl, 20, SpringLayout.WEST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerWisLbl, 20, SpringLayout.WEST,spielerProgressPanel);
+
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,10, SpringLayout.SOUTH,statSpielerName);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerHpLbl,10, SpringLayout.SOUTH,statSpielerLvlLbl);
+        layout.putConstraint(SpringLayout.NORTH,spielerHealthBar,5, SpringLayout.SOUTH,statSpielerHpLbl);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerMpLbl,10, SpringLayout.SOUTH,spielerHealthBar);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExpLbl,10, SpringLayout.SOUTH,statSpielerMpLbl);
+        layout.putConstraint(SpringLayout.NORTH,spielerExpBar,5, SpringLayout.SOUTH,statSpielerExpLbl);
+
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerAtkLbl,10, SpringLayout.NORTH,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDefLbl,10, SpringLayout.SOUTH,statSpielerAtkLbl);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerStrLbl,10, SpringLayout.SOUTH,statSpielerDefLbl);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDexLbl,10, SpringLayout.SOUTH,statSpielerStrLbl);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerKnoLbl,10, SpringLayout.SOUTH,statSpielerDexLbl);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerWisLbl,10, SpringLayout.SOUTH,statSpielerKnoLbl);
 
         //layout rechts
         layout.putConstraint(SpringLayout.EAST,statSpielerHp,-20, SpringLayout.EAST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.EAST,statSpielerMp,-20, SpringLayout.EAST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.EAST,statSpielerExp,-20, SpringLayout.EAST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.EAST,statSpielerAtk,-20, SpringLayout.EAST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.EAST,statSpielerDef,-20, SpringLayout.EAST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.EAST,statSpielerLvl,-20, SpringLayout.EAST,spielerStatsPanel);
 
-        layout.putConstraint(SpringLayout.NORTH,statSpielerLvl,20, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerHp,50, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerMp,80, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerExp,110, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerAtk,140, SpringLayout.NORTH,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerDef,170, SpringLayout.NORTH,spielerStatsPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerAtk,-20, SpringLayout.EAST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerDef,-20, SpringLayout.EAST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerStr,-20, SpringLayout.EAST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerDex,-20, SpringLayout.EAST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerKno,-20, SpringLayout.EAST,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerWis,-20, SpringLayout.EAST,spielerProgressPanel);
+
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvl,10, SpringLayout.SOUTH,statSpielerName);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerHp,10, SpringLayout.SOUTH,statSpielerLvl);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerMp,10, SpringLayout.SOUTH,spielerHealthBar);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExp,10, SpringLayout.SOUTH,statSpielerMp);
+
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerAtk,10, SpringLayout.NORTH,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDef,10, SpringLayout.SOUTH,statSpielerAtk);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerStr,10, SpringLayout.SOUTH,statSpielerDef);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDex,10, SpringLayout.SOUTH,statSpielerStr);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerKno,10, SpringLayout.SOUTH,statSpielerDex);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerWis,10, SpringLayout.SOUTH,statSpielerKno);
 
 
         spielerStatsPanel.setLayout(layout);
         spielerStatsPanel.add(statSpielerName);
         spielerStatsPanel.add(statSpielerHpLbl);
         spielerStatsPanel.add(statSpielerHp);
+        spielerStatsPanel.add(spielerHealthBar);
         spielerStatsPanel.add(statSpielerLvlLbl);
         spielerStatsPanel.add(statSpielerLvl);
         spielerStatsPanel.add(statSpielerMpLbl);
         spielerStatsPanel.add(statSpielerMp);
         spielerStatsPanel.add(statSpielerExpLbl);
         spielerStatsPanel.add(statSpielerExp);
-        spielerStatsPanel.add(statSpielerAtkLbl);
-        spielerStatsPanel.add(statSpielerAtk);
-        spielerStatsPanel.add(statSpielerDefLbl);
-        spielerStatsPanel.add(statSpielerDef);
+        spielerStatsPanel.add(spielerExpBar);
+        spielerProgressPanel.add(statSpielerAtkLbl);
+        spielerProgressPanel.add(statSpielerAtk);
+        spielerProgressPanel.add(statSpielerDefLbl);
+        spielerProgressPanel.add(statSpielerDef);
+        spielerProgressPanel.add(statSpielerStrLbl);
+        spielerProgressPanel.add(statSpielerStr);
+        spielerProgressPanel.add(statSpielerDexLbl);
+        spielerProgressPanel.add(statSpielerDex);
+        spielerProgressPanel.add(statSpielerKnoLbl);
+        spielerProgressPanel.add(statSpielerKno);
+        spielerProgressPanel.add(statSpielerWisLbl);
+        spielerProgressPanel.add(statSpielerWis);
         //endregion
         //region GegnerPanel
         SpringLayout layoutGegner = new SpringLayout();
@@ -492,7 +625,7 @@ public class Main {
         gegnerHealthBar.setValue(gegnerHp);
         gegnerHealthBar.setFont(barFont);
         gegnerHealthBar.setStringPainted(true);
-        gegnerHealthBar.setForeground(new Color(128,0,0));
+        gegnerHealthBar.setForeground(Color.decode("#C70039"));
         gegnerHealthBar.setPreferredSize(new Dimension(180,15));
 
         gegnerBildPanel.setPreferredSize(new Dimension(297,297));
@@ -528,14 +661,51 @@ public class Main {
         naviPanel = new JPanel();
         naviPanel.setPreferredSize(new Dimension(200,227));
         naviPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,1,true));
+        SpringLayout naviLayout = new SpringLayout();
+        naviPanel.setLayout(naviLayout);
 
         layoutGegner.putConstraint(SpringLayout.EAST,naviPanel,0,SpringLayout.EAST,spielPanel);
         layoutGegner.putConstraint(SpringLayout.SOUTH,naviPanel,0,SpringLayout.SOUTH,spielPanel);
+        ImageIcon linksBild = new ImageIcon("res/Icons/Skull.png");
 
+        naviLinksLbl = new JLabel(linksBild);
+        naviRechtsLbl = new JLabel("Rechts");
+        naviLinksLinksLbl = new JLabel("LinksLinks");
+        naviLinksRechtsLbl = new JLabel("LinksRechts");
+        naviRechtsLinksLbl = new JLabel("RechtsLinks");
+        naviRechtsRechtsLbl = new JLabel("RechtsRechts");
+
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviLinksLbl,-50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl,50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviLinksLbl,50,SpringLayout.VERTICAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviRechtsLbl,50,SpringLayout.VERTICAL_CENTER,naviPanel);
+
+        //links
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksLinksLbl,-30,SpringLayout.VERTICAL_CENTER,naviLinksLbl);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksRechtsLbl,-30,SpringLayout.VERTICAL_CENTER,naviLinksLbl);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviLinksLbl);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviLinksLbl);
+
+
+        //rechts
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsLinksLbl,-30,SpringLayout.VERTICAL_CENTER,naviRechtsLbl);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsRechtsLbl,-30,SpringLayout.VERTICAL_CENTER,naviRechtsLbl);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl);
+
+
+
+        naviPanel.add(naviLinksLbl);
+        naviPanel.add(naviRechtsLbl);
+        naviPanel.add(naviLinksLinksLbl);
+        naviPanel.add(naviLinksRechtsLbl);
+        naviPanel.add(naviRechtsLinksLbl);
+        naviPanel.add(naviRechtsRechtsLbl);
         spielPanel.add(naviPanel);
         //endregion
 
         logBtn.addActionListener(e -> logFrame.setVisible(true));
+
 
         auswahlPanelLinks.setVisible(false);
         vorschauPanel.setVisible(false);
@@ -576,7 +746,7 @@ public class Main {
         vorschauStatsPanel = new JPanel();
         vorschauStatsPanel.setPreferredSize(new Dimension(281,150));
         vorschauStatsPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,1, true));
-        layout.putConstraint(SpringLayout.NORTH, vorschauStatsPanel, -150, SpringLayout.SOUTH, vorschauPanel);
+        layout.putConstraint(SpringLayout.NORTH, vorschauStatsPanel, -148, SpringLayout.SOUTH, vorschauPanel);
         vorschauStatsPanel.setLayout(layoutStats);
 
         auswahlBtn = new JButton("Auswahl");
@@ -589,7 +759,7 @@ public class Main {
 
         vorschauLbl = new JLabel();
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,vorschauLbl,0,SpringLayout.HORIZONTAL_CENTER,vorschauPanel);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER,vorschauLbl,0,SpringLayout.VERTICAL_CENTER,vorschauPanel);
+//        layout.putConstraint(SpringLayout.VERTICAL_CENTER,vorschauLbl,0,SpringLayout.VERTICAL_CENTER,vorschauPanel);
         vorschauStatsLblLinks = new JLabel();
         vorschauFont = new Font("Segoe UI",Font.BOLD,14);
         vorschauStatsLblLinks.setFont(vorschauFont);
@@ -634,13 +804,13 @@ public class Main {
             spielerKno = Spieler.krieger.kno;
             spielerWis = Spieler.krieger.wis;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Krieger.png");
-            vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
             vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
                     spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
+            vorschauLbl.setIcon(vorschauBild);
             con.repaint();
         });
         auswahlJaegerBtn.addActionListener(e -> {
@@ -786,8 +956,8 @@ public class Main {
         vorschauStatsPanel.add(vorschauStatsName);
         vorschauStatsPanel.add(vorschauStatsLblLinks);
         vorschauStatsPanel.add(vorschauStatsLblRechts);
-        vorschauPanel.add(vorschauLbl);
         vorschauPanel.add(vorschauStatsPanel);
+        vorschauPanel.add(vorschauLbl);
         con.add(auswahlBtn);
         con.add(vorschauPanel);
         con.add(auswahlPanelLinks);
@@ -798,6 +968,7 @@ public class Main {
     }
     public static class TitleScreenHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
+            gegnerInitialisieren();
             charakterAuswahl();
             adminFenster();
         }

@@ -4,14 +4,13 @@ public class Gegner extends Charaktere{
     int range;
     private Random rnd = new Random();
     public Gegner(String name, int maxHp, int maxMp, int atk, int def, double exp, int lvl){
-        super(name, maxHp, maxMp,0,0,0,0, atk, def, exp, lvl);
+        super(name, maxHp, maxMp,0,0,0,0, atk, def,0,0, exp, lvl);
     }
 
     public int attack() {
         range = rnd.nextInt((atk-3),(atk+3));
         return range;
     }
-
     public int defend() {
         range = rnd.nextInt((def-3),(def+3));
         return range;

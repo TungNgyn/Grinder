@@ -10,11 +10,13 @@ public abstract class Charaktere {
     public int wis;
     public int atk;
     public int def;
+    public int vit;
+    public int lck;
     public int lvl;
     public double exp;
 
     public Charaktere(String name, int maxHp, int maxMp, int str, int dex, int kno, int wis,
-                      int atk, int def, double exp, int lvl){
+                      int atk, int def, int vit, int lck, double exp, int lvl){
         this.name = name;
         this.maxHp = maxHp;
         this.hp = maxHp;
@@ -26,6 +28,8 @@ public abstract class Charaktere {
         this.wis = wis;
         this.atk = atk;
         this.def = def;
+        this.vit = vit;
+        this.lck = lck;
         this.exp = exp;
         this.lvl = lvl;
     }
