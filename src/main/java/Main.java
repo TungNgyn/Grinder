@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Locale;
 import java.util.Random;
 
@@ -18,14 +20,14 @@ public class Main {
             statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
             statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHp,
             spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl, vorschauLbl,
-            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl,
-            naviLinksLbl, naviRechtsLbl, naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
+            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl, naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
             naviRechtsRechtsLbl;
     private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
             skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5, adminBtn6,
             adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn, auswahlMagierBtn, auswahlJaegerBtn,
             auswahlPriesterBtn, auswahlBtn, adminBtn10, auswahlPaladinBtn, auswahlNinjaBtn,
-            adminBtn11, adminBtn12;
+            adminBtn11, adminBtn12, adminBtn13,
+            naviLinksBtn, naviRechtsBtn;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
     private static JProgressBar spielerHealthBar, spielerExpBar, gegnerHealthBar;
@@ -35,10 +37,12 @@ public class Main {
                 spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl,
             spielerStr, spielerDex, spielerKno, spielerWis;
     static double gegnerExp, spielerExp;
+    static boolean encounterAktiv = false;
     static SpringLayout layout = new SpringLayout();
+    static Random rnd = new Random();
 
     static Gegner[] gegnerListe = new Gegner[4];
-    static Karte[] kartenListe = new Karte[2];
+    static Karte[] kartenListe = new Karte[7];
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
 
@@ -121,9 +125,13 @@ public class Main {
         titelStartBtn.addActionListener(tsHandler);
     }
     public static void mapInitialisieren(){
-        kartenListe[0] = Karte.gegner;
-        kartenListe[1] = Karte.lager;
-        kartenListe[2] = Karte.event;
+        kartenListe[0] = Karte.kampf;
+        kartenListe[1] = Karte.kampf;
+        kartenListe[2] = Karte.kampf;
+        kartenListe[3] = Karte.kampf;
+        kartenListe[4] = Karte.lager;
+        kartenListe[5] = Karte.lager;
+        kartenListe[6] = Karte.event;
     }
     public static void gegnerInitialisieren(){
         gegnerListe[0] = Gegner.schneemann;
@@ -149,6 +157,7 @@ public class Main {
         adminBtn10 = new JButton("Geist");
         adminBtn11 = new JButton("Skill1 ändern");
         adminBtn12 = new JButton("Random Encounter");
+        adminBtn13 = new JButton("Encounter an/aus");
 
         adminPanel.add(adminBtn1);
         adminPanel.add(adminBtn2);
@@ -162,6 +171,7 @@ public class Main {
         adminPanel.add(adminBtn10);
         adminPanel.add(adminBtn11);
         adminPanel.add(adminBtn12);
+        adminPanel.add(adminBtn13);
         //endregion
 
         adminBtn1.addActionListener(e -> logTextArea.setText(""));
@@ -263,10 +273,10 @@ public class Main {
         });
         adminBtn12.addActionListener(e -> {
             Random rnd = new Random();
-            int i = rnd.nextInt(0,3);
+            int i = rnd.nextInt(0,4);
             gegnerName = gegnerListe[i].name;
             updateGegnerHp();
-            Gegner.geist.lvl = 1;
+            gegnerListe[i].lvl = 1;
             gegnerLvl = gegnerListe[i].lvl;
             gegnerName = gegnerListe[i].name;
             gegnerMaxHp = gegnerListe[i].maxHp*gegnerListe[i].lvl;
@@ -283,6 +293,15 @@ public class Main {
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
+        adminBtn13.addActionListener(e -> {
+            if (encounterAktiv == false){
+                encounterAktiv = true;
+                System.out.println(encounterAktiv);
+            } else {
+                encounterAktiv = false;
+                System.out.println(encounterAktiv);
+            }
+        });
 
         conAdmin = adminFrame.getContentPane();
         conAdmin.add(adminPanel);
@@ -292,7 +311,34 @@ public class Main {
         adminFrame.setVisible(true);
     }
     public static void updateSpielerStats(){
-        if (spielerExp>99.9999999999){
+//        if (spielerExp>99.9999999999){
+//            spielerLvl++;
+//            spielerExp = 0;
+//
+//            statSpielerLvl.setText(""+spielerLvl);
+//            spielerMaxHp *= spielerLvl;
+//            spielerHp = spielerMaxHp;
+//            spielerMaxMp *= spielerLvl;
+//            spielerMp = spielerMaxMp;
+//            statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spielerExp)+"%"));
+//            spielerAtk *= spielerLvl;
+//            spielerDef *= spielerLvl;
+//            spielerHealthBar.setMaximum(spielerMaxHp);
+//            updateSpielerStats();
+//        }
+        checkExp();
+        statSpielerName.setText(spielerName);
+        statSpielerExp.setText(String.format(Locale.US,"%.2f",spielerExp)+"%");
+        statSpielerLvl.setText(""+spielerLvl);
+        statSpielerHp.setText(spielerHp+"/"+spielerMaxHp);
+        statSpielerMp.setText(spielerMp+"/"+spielerMaxMp);
+        statSpielerAtk.setText(""+spielerAtk);
+        statSpielerDef.setText(""+spielerDef);
+        spielerHealthBar.setValue(spielerHp);
+        spielerExpBar.setValue((int)spielerExp);
+    }
+    static void checkExp(){
+        if(spielerExp > 99.9999999){
             spielerLvl++;
             spielerExp = 0;
 
@@ -307,15 +353,6 @@ public class Main {
             spielerHealthBar.setMaximum(spielerMaxHp);
             updateSpielerStats();
         }
-        statSpielerName.setText(spielerName);
-        statSpielerExp.setText(String.format(Locale.US,"%.2f",spielerExp)+"%");
-        statSpielerLvl.setText(""+spielerLvl);
-        statSpielerHp.setText(spielerHp+"/"+spielerMaxHp);
-        statSpielerMp.setText(spielerMp+"/"+spielerMaxMp);
-        statSpielerAtk.setText(""+spielerAtk);
-        statSpielerDef.setText(""+spielerDef);
-        spielerHealthBar.setValue(spielerHp);
-        spielerExpBar.setValue((int)spielerExp);
     }
     public static void updateGegnerHp(){
         spielGegnerName.setText(gegnerName);
@@ -392,7 +429,7 @@ public class Main {
         spielerProgressPanel.setLayout(spielerProgressLayout);
 
         spielerHealthBar = new JProgressBar(0,spielerMaxHp);
-        spielerExpBar = new JProgressBar(0,100);
+        spielerExpBar = new JProgressBar(0,50);
 
         ImageIcon einstellungIcon = new ImageIcon("res/Settings.png");
         optionenPanel = new JPanel();
@@ -672,42 +709,78 @@ public class Main {
 
         layoutGegner.putConstraint(SpringLayout.EAST,naviPanel,0,SpringLayout.EAST,spielPanel);
         layoutGegner.putConstraint(SpringLayout.SOUTH,naviPanel,0,SpringLayout.SOUTH,spielPanel);
-        ImageIcon linksBild = new ImageIcon("res/Icons/Skull.png");
+        int bild1 = rnd.nextInt(0,7);
+        int bild2 = rnd.nextInt(0,7);
+        int bild3 = rnd.nextInt(0,7);
+        int bild4 = rnd.nextInt(0,7);
+        int bild5 = rnd.nextInt(0,7);
+        int bild6 = rnd.nextInt(0,7);
 
-        naviLinksLbl = new JLabel(linksBild);
-        naviRechtsLbl = new JLabel("Rechts");
-        naviLinksLinksLbl = new JLabel("LinksLinks");
-        naviLinksRechtsLbl = new JLabel("LinksRechts");
-        naviRechtsLinksLbl = new JLabel("RechtsLinks");
-        naviRechtsRechtsLbl = new JLabel("RechtsRechts");
+        ImageIcon linksBild = new ImageIcon("res/Icons/"+kartenListe[bild1].name+".png");
+        ImageIcon rechtsBild = new ImageIcon("res/Icons/"+kartenListe[bild2].name+".png");
+        ImageIcon linksLinksBild = new ImageIcon("res/Icons/"+kartenListe[bild3].name+".png");
+        ImageIcon linksRechtsBild = new ImageIcon("res/Icons/"+kartenListe[bild4].name+".png");
+        ImageIcon rechtsLinksBild = new ImageIcon("res/Icons/"+kartenListe[bild5].name+".png");
+        ImageIcon rechtsRechtsBild = new ImageIcon("res/Icons/"+kartenListe[bild6].name+".png");
 
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviLinksLbl,-50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl,50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviLinksLbl,50,SpringLayout.VERTICAL_CENTER,naviPanel);
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviRechtsLbl,50,SpringLayout.VERTICAL_CENTER,naviPanel);
+        naviLinksBtn = new JButton(linksBild);
+        naviRechtsBtn = new JButton(rechtsBild);
+        naviLinksLinksLbl = new JLabel(linksLinksBild);
+        naviLinksRechtsLbl = new JLabel(linksRechtsBild);
+        naviRechtsLinksLbl = new JLabel(rechtsLinksBild);
+        naviRechtsRechtsLbl = new JLabel(rechtsRechtsBild);
+
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviLinksBtn,-50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviRechtsBtn,50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviLinksBtn,50,SpringLayout.VERTICAL_CENTER,naviPanel);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER,naviRechtsBtn,50,SpringLayout.VERTICAL_CENTER,naviPanel);
 
         //links
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksLinksLbl,-30,SpringLayout.VERTICAL_CENTER,naviLinksLbl);
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksRechtsLbl,-30,SpringLayout.VERTICAL_CENTER,naviLinksLbl);
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviLinksLbl);
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviLinksLbl);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksLinksLbl,-40,SpringLayout.VERTICAL_CENTER,naviLinksBtn);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviLinksRechtsLbl,-40,SpringLayout.VERTICAL_CENTER,naviLinksBtn);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviLinksBtn);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviLinksRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviLinksBtn);
 
 
         //rechts
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsLinksLbl,-30,SpringLayout.VERTICAL_CENTER,naviRechtsLbl);
-        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsRechtsLbl,-30,SpringLayout.VERTICAL_CENTER,naviRechtsLbl);
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl);
-        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviRechtsLbl);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsLinksLbl,-40,SpringLayout.VERTICAL_CENTER,naviRechtsBtn);
+        naviLayout.putConstraint(SpringLayout.VERTICAL_CENTER, naviRechtsRechtsLbl,-40,SpringLayout.VERTICAL_CENTER,naviRechtsBtn);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsLinksLbl,-30,SpringLayout.HORIZONTAL_CENTER,naviRechtsBtn);
+        naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviRechtsRechtsLbl,30,SpringLayout.HORIZONTAL_CENTER,naviRechtsBtn);
 
-
-
-        naviPanel.add(naviLinksLbl);
-        naviPanel.add(naviRechtsLbl);
+        naviPanel.add(naviLinksBtn);
+        naviPanel.add(naviRechtsBtn);
         naviPanel.add(naviLinksLinksLbl);
         naviPanel.add(naviLinksRechtsLbl);
         naviPanel.add(naviRechtsLinksLbl);
         naviPanel.add(naviRechtsRechtsLbl);
         spielPanel.add(naviPanel);
+
+        //movement
+        naviLinksBtn.addActionListener(e -> {
+            int z = rnd.nextInt(0,7);
+            int y = rnd.nextInt(0,7);
+            int x = rnd.nextInt(0,7);
+            int w = rnd.nextInt(0,7);
+            naviLinksBtn.setIcon(naviLinksLinksLbl.getIcon());
+            naviRechtsBtn.setIcon(naviLinksRechtsLbl.getIcon());
+            naviLinksLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[z].name+".png"));
+            naviLinksRechtsLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[y].name+".png"));
+            naviRechtsLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[x].name+".png"));
+            naviRechtsRechtsLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[w].name+".png"));
+         });
+        naviRechtsBtn.addActionListener(e -> {
+            int z = rnd.nextInt(0,7);
+            int y = rnd.nextInt(0,7);
+            int x = rnd.nextInt(0,7);
+            int w = rnd.nextInt(0,7);
+            naviLinksBtn.setIcon(naviRechtsLinksLbl.getIcon());
+            naviRechtsBtn.setIcon(naviRechtsRechtsLbl.getIcon());
+            naviLinksLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[z].name+".png"));
+            naviLinksRechtsLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[y].name+".png"));
+            naviRechtsLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[x].name+".png"));
+            naviRechtsRechtsLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[w].name+".png"));
+        });
         //endregion
 
         logBtn.addActionListener(e -> logFrame.setVisible(true));
@@ -974,6 +1047,7 @@ public class Main {
     }
     public static class TitleScreenHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
+            mapInitialisieren();
             gegnerInitialisieren();
             charakterAuswahl();
             adminFenster();
