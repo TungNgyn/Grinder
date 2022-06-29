@@ -38,6 +38,7 @@ public class Main {
     static SpringLayout layout = new SpringLayout();
 
     static Gegner[] gegnerListe = new Gegner[4];
+    static Karte[] kartenListe = new Karte[2];
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
 
@@ -118,6 +119,11 @@ public class Main {
         //endregion
 
         titelStartBtn.addActionListener(tsHandler);
+    }
+    public static void mapInitialisieren(){
+        kartenListe[0] = Karte.gegner;
+        kartenListe[1] = Karte.lager;
+        kartenListe[2] = Karte.event;
     }
     public static void gegnerInitialisieren(){
         gegnerListe[0] = Gegner.schneemann;
