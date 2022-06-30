@@ -8,4 +8,5 @@ public class Karte {
     static Karte lager = new Karte("Lager");
     static Karte kampf = new Karte("Kampf");
     static Karte event = new Karte("Event");
+    static Karte boss = new Karte("Boss");
 }

@@ -20,7 +20,7 @@ public class Spieler extends Charaktere{
     static Spieler paladin = new Spieler("Paladin", 30,10,10,2,2,10,
             10,15,10,2,0,1);
     static Spieler ninja = new Spieler("Ninja", 10,10,2,15,9,4,
-            10,5,0,2,7,1);
+            10,5,0,2,0,1);
 
 
     public int attack() {
