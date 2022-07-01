@@ -54,7 +54,7 @@ public class Main {
     static ImageIcon skill1Bild;
 
     static Skills[] skillListe = new Skills[4];
-    static Gegner[] gegnerListe = new Gegner[4];
+    static Gegner[] gegnerListeT1 = new Gegner[15];
     static Karte[] kartenListe = new Karte[7];
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
@@ -159,34 +159,45 @@ public class Main {
         kartenListe[6] = Karte.event;
     }
     public static void gegnerInitialisieren() {
-        gegnerListe[0] = Gegner.schneemann;
-        gegnerListe[1] = Gegner.oger;
-        gegnerListe[2] = Gegner.fledermaus;
-        gegnerListe[3] = Gegner.geist;
+        gegnerListeT1[0] = Gegner.puppe;
+        gegnerListeT1[1] = Gegner.sahagin;
+        gegnerListeT1[2] = Gegner.skelettkrieger;
+        gegnerListeT1[3] = Gegner.werwolf;
+        gegnerListeT1[4] = Gegner.fledermaus;
+        gegnerListeT1[5] = Gegner.hornisse;
+        gegnerListeT1[6] = Gegner.ratte;
+        gegnerListeT1[7] = Gegner.schlange;
+        gegnerListeT1[8] = Gegner.skorpion;
+        gegnerListeT1[9] = Gegner.pflanze;
+        gegnerListeT1[10] = Gegner.imp;
+        gegnerListeT1[11] = Gegner.schleim;
+        gegnerListeT1[12] = Gegner.spinne;
+        gegnerListeT1[13] = Gegner.qualle;
+        gegnerListeT1[14] = Gegner.zombie;
     }
     public static void randomEncounterTier1() {
         Random rnd = new Random();
-        int i = rnd.nextInt(0, 4);
-        gegnerName = gegnerListe[i].name;
+        int i = rnd.nextInt(0, 15);
+        gegnerName = gegnerListeT1[i].name;
         updateGegnerHp();
-        gegnerListe[i].lvl = 1;
-        gegnerLvl = gegnerListe[i].lvl;
-        gegnerName = gegnerListe[i].name;
-        gegnerMaxHp = gegnerListe[i].maxHp * gegnerListe[i].lvl;
+        gegnerListeT1[i].lvl = 1;
+        gegnerLvl = gegnerListeT1[i].lvl;
+        gegnerName = gegnerListeT1[i].name;
+        gegnerMaxHp = gegnerListeT1[i].maxHp * gegnerListeT1[i].lvl;
         gegnerHp = gegnerMaxHp;
-        gegnermaxSp = gegnerListe[i].maxSp * gegnerListe[i].lvl;
+        gegnermaxSp = gegnerListeT1[i].maxSp * gegnerListeT1[i].lvl;
         gegnerSp = gegnermaxSp;
-        gegnerAtk = gegnerListe[i].atk;
-        gegnerDef = gegnerListe[i].def;
-        gegnerExp = gegnerListe[i].exp;
-        gegnerStr = gegnerListe[i].str;
-        gegnerDex = gegnerListe[i].dex;
-        gegnerKno = gegnerListe[i].kno;
-        gegnerWis = gegnerListe[i].wis;
+        gegnerAtk = gegnerListeT1[i].atk;
+        gegnerDef = gegnerListeT1[i].def;
+        gegnerExp = gegnerListeT1[i].exp;
+        gegnerStr = gegnerListeT1[i].str;
+        gegnerDex = gegnerListeT1[i].dex;
+        gegnerKno = gegnerListeT1[i].kno;
+        gegnerWis = gegnerListeT1[i].wis;
         gegnerHealthBar.setMaximum(gegnerMaxHp);
         updateGegnerHp();
         gegnerInfoPanel.setVisible(true);
-        ImageIcon gegnerBild = new ImageIcon("res/Gegner/" + gegnerListe[i].name + ".png");
+        ImageIcon gegnerBild = new ImageIcon("res/Gegner/" + gegnerListeT1[i].name + ".png");
         gegnerBildLbl.setVisible(true);
         gegnerBildLbl.setIcon(gegnerBild);
     }
@@ -933,7 +944,7 @@ public class Main {
                 int w = rnd.nextInt(0,7);
 
                 if (naviLinksBtn.getIcon().toString().equals("res/Icons/Kampf.png")) {
-                    System.out.println("Kampf");
+                    System.out.println(gegnerName);
                     randomEncounterTier1();
                 } else if (naviLinksBtn.getIcon().toString().equals("res/Icons/Lager.png")) {
                     System.out.println("Lager");
@@ -1104,7 +1115,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.krieger.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.krieger.atk+Spieler.krieger.str;
+            spielerAtk = Spieler.krieger.atk;
             spielerDef = Spieler.krieger.def;
             spielerExp = Spieler.krieger.exp;
             spielerLvl = Spieler.krieger.lvl;
@@ -1133,7 +1144,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.jaeger.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.jaeger.atk+Spieler.jaeger.dex;
+            spielerAtk = Spieler.jaeger.atk;
             spielerDef = Spieler.jaeger.def;
             spielerExp = Spieler.jaeger.exp;
             spielerLvl = Spieler.jaeger.lvl;
@@ -1159,7 +1170,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.magier.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.magier.atk+Spieler.magier.kno;
+            spielerAtk = Spieler.magier.atk;
             spielerDef = Spieler.magier.def;
             spielerExp = Spieler.magier.exp;
             spielerLvl = Spieler.magier.lvl;
@@ -1185,7 +1196,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.priester.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.priester.atk+Spieler.priester.wis;
+            spielerAtk = Spieler.priester.atk;
             spielerDef = Spieler.priester.def;
             spielerExp = Spieler.priester.exp;
             spielerLvl = Spieler.priester.lvl;
@@ -1224,7 +1235,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.paladin.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.paladin.atk+Spieler.paladin.str;
+            spielerAtk = Spieler.paladin.atk;
             spielerDef = Spieler.paladin.def;
             spielerExp = Spieler.paladin.exp;
             spielerLvl = Spieler.paladin.lvl;
@@ -1250,7 +1261,7 @@ public class Main {
             spielerHp = spielerMaxHp;
             spielerMaxSp = Spieler.ninja.maxSp;
             spielerSp = spielerMaxSp;
-            spielerAtk = Spieler.ninja.atk+Spieler.ninja.str;
+            spielerAtk = Spieler.ninja.atk;
             spielerDef = Spieler.ninja.def;
             spielerExp = Spieler.ninja.exp;
             spielerLvl = Spieler.ninja.lvl;
