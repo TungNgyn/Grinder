@@ -10,58 +10,82 @@ import java.util.Random;
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
-            textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel, logPanel, vorschauStatsPanel,
-            logBtnPanel, adminPanel, auswahlPanelLinks, vorschauPanel, auswahlPanelRechts, gegnerInfoPanel,
+            textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel,
+            logPanel, vorschauStatsPanel,
+            logBtnPanel, adminPanel, auswahlPanelLinks, vorschauPanel,
+            auswahlPanelRechts, gegnerInfoPanel,
             gegnerBildPanel, naviPanel;
     private static JTextArea logTextArea;
-    private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp, mainTextLbl,
-            statSpielerMpLbl, statSpielerMp, statSpielerExpLbl, statSpielerExp,
-            statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef, spielGegnerHp,
+    private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp,
+            mainTextLbl,
+            statspielerSpLbl, statspielerSp, statSpielerExpLbl, statSpielerExp,
+            statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef,
+            spielGegnerHp,
             spielGegnerLvl, spielGegnerName, statSpielerLvl, statSpielerLvlLbl, vorschauLbl,
-            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl, naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
-            naviRechtsRechtsLbl, pfeilHochLinks, pfeilHochRechts, naviLbl, naviTitelLbl, naviEbeneLbl,
+            vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl,
+            naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
+            naviRechtsRechtsLbl, pfeilHochLinks, pfeilHochRechts, naviLbl, naviTitelLbl,
+            naviEbeneLbl,
             statSpielerStr, statSpielerDex, statSpielerKno, statSpielerWis;
-    private static JButton titelStartBtn, logBtn, skillBtn1, skillBtn2, skillBtn3,
-            skillBtn4, skillBtn5, adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5, adminBtn6,
-            adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn, auswahlMagierBtn, auswahlJaegerBtn,
+    private static JButton titelStartBtn, logBtn,  adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5,
+            adminBtn6, skillBtn1, skillBtn2, skillBtn3, skillBtn4, skillBtn5,
+            adminBtn7, adminBtn8, adminBtn9, auswahlKriegerBtn, auswahlMagierBtn,
+            auswahlJaegerBtn,
             auswahlPriesterBtn, auswahlBtn, adminBtn10, auswahlPaladinBtn, auswahlNinjaBtn,
             adminBtn11, adminBtn12, adminBtn13, strUpBtn, dexUpBtn, knoUpBtn, wisUpBtn,
             naviLinksBtn, naviRechtsBtn;
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
-    private static JProgressBar spielerHealthBar, spielerExpBar, gegnerHealthBar;
+    private static JProgressBar spielerHpBar, spielerSpBar, spielerExpBar, gegnerHealthBar;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont, vorschauFont, barFont;
-    static String gegnerName, spielerName;
-    static int gegnerHp, gegnerMaxHp, gegnerMp, gegnerMaxMp, gegnerAtk, gegnerDef, gegnerLvl,
-                spielerHp, spielerMaxHp, spielerMp, spielerMaxMp, spielerAtk, spielerDef, spielerLvl,
-            spielerStr, spielerDex, spielerKno, spielerWis;
+    static String gegnerName, spielerName, skill1Name, skill1Mod;
+    static int gegnerHp, gegnerMaxHp, gegnerSp, gegnermaxSp, gegnerAtk, gegnerDef, gegnerLvl,
+            spielerHp, spielerMaxHp, spielerSp, spielerMaxSp, spielerAtk, spielerDef, spielerLvl,
+            spielerStr, spielerDex, spielerKno, spielerWis, spielerHpMod, spielerSpMod,
+            gegnerStr, gegnerDex, gegnerKno, gegnerWis, skill1Genauigkeit, skill1Kraft;
     static int skillpoints = 0;
     static int raumCounter = 0;
     static double gegnerExp, spielerExp;
     static boolean encounterAktiv = false;
     static SpringLayout layout = new SpringLayout();
     static Random rnd = new Random();
+    static int angriff, schaden;
+    static String angriffMod, schadenMod;
+    static ImageIcon skill1Bild;
 
+    static Skills[] skillListe = new Skills[4];
     static Gegner[] gegnerListe = new Gegner[4];
     static Karte[] kartenListe = new Karte[7];
 
     TitleScreenHandler tsHandler = new TitleScreenHandler();
 
-    public static void main(String[] args){
-        new Main();
+    static Dimension btnDimension = new Dimension(50,50);
+    public static void btnInitialisieren(){
+        skillBtn1 = new JButton();
+        skillBtn2 = new JButton();
+        skillBtn3 = new JButton();
+        skillBtn4 = new JButton();
+        skillBtn5 = new JButton();
+
+            skillBtn1.setPreferredSize(btnDimension);
+            skillBtn2.setPreferredSize(btnDimension);
+            skillBtn3.setPreferredSize(btnDimension);
+            skillBtn4.setPreferredSize(btnDimension);
+            skillBtn5.setPreferredSize(btnDimension);
     }
-    public Main(){
+    public static void main(String[] args) {new Main();}
+    public Main() {
         FlatDarculaLaf.setup();
         mainFrame = new JFrame("Grinder");
-        mainFrame.setPreferredSize(new Dimension(800,600));
+        mainFrame.setPreferredSize(new Dimension(800, 600));
         titelFont = new Font("Times New Roman", Font.BOLD, 90);
-        startBtnFont = new Font("Segoe UI", Font.BOLD,30);
-        normalFont = new Font("Segoe UI", Font.BOLD,22);
-        textFont = new Font("Segoe UI",Font.BOLD,15);
-        barFont = new Font("Segoe UI", Font.BOLD,18);
+        startBtnFont = new Font("Segoe UI", Font.BOLD, 30);
+        normalFont = new Font("Segoe UI", Font.BOLD, 22);
+        textFont = new Font("Segoe UI", Font.BOLD, 15);
+        barFont = new Font("Segoe UI", Font.BOLD, 18);
 
         titelPanel = new JPanel();
-        titelPanel.setBounds(100,50,600,250);
+        titelPanel.setBounds(100, 50, 600, 250);
         titelPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
         titelLbl = new JLabel("gfdfhrtd");
         titelLbl.setForeground(Color.WHITE);
@@ -69,7 +93,7 @@ public class Main {
         titelPanel.add(titelLbl);
 
         titelStartBtnPanel = new JPanel();
-        titelStartBtnPanel.setBounds(300,400,200,100);
+        titelStartBtnPanel.setBounds(300, 400, 200, 100);
         titelStartBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
 
         titelStartBtn = new JButton("START");
@@ -94,7 +118,7 @@ public class Main {
 
         //region Textlogfenster
         logFrame = new JFrame("Textlog");
-        logFrame.setPreferredSize(new Dimension(500,400));
+        logFrame.setPreferredSize(new Dimension(500, 400));
         logFrame.setResizable(false);
 
         logPanel = new JPanel();
@@ -104,16 +128,16 @@ public class Main {
         logTextArea.setFont(textFont);
 
         logTextAreaScroll = new JScrollPane(logTextArea);
-        logTextAreaScroll.setPreferredSize(new Dimension(450,285));
+        logTextAreaScroll.setPreferredSize(new Dimension(450, 285));
         logTextAreaScroll.setBorder(BorderFactory.createEmptyBorder());
         logTextAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        logTextAreaScroll.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        logTextAreaScroll.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
         logPanel.add(logTextAreaScroll);
         logPanel.setBackground(Color.GREEN);
 
         logBtnPanel = new JPanel();
-        logBtnPanel.setBounds(17,300,450,50);
-        logBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        logBtnPanel.setBounds(17, 300, 450, 50);
+        logBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
 
         conLog = logFrame.getContentPane();
         conLog.setBackground(Color.GREEN);
@@ -125,7 +149,7 @@ public class Main {
 
         titelStartBtn.addActionListener(tsHandler);
     }
-    public static void mapInitialisieren(){
+    public static void mapInitialisieren() {
         kartenListe[0] = Karte.kampf;
         kartenListe[1] = Karte.kampf;
         kartenListe[2] = Karte.kampf;
@@ -134,35 +158,39 @@ public class Main {
         kartenListe[5] = Karte.lager;
         kartenListe[6] = Karte.event;
     }
-    public static void gegnerInitialisieren(){
+    public static void gegnerInitialisieren() {
         gegnerListe[0] = Gegner.schneemann;
         gegnerListe[1] = Gegner.oger;
         gegnerListe[2] = Gegner.fledermaus;
         gegnerListe[3] = Gegner.geist;
     }
-    public static void randomEncounterTier1(){
+    public static void randomEncounterTier1() {
         Random rnd = new Random();
-        int i = rnd.nextInt(0,4);
+        int i = rnd.nextInt(0, 4);
         gegnerName = gegnerListe[i].name;
         updateGegnerHp();
         gegnerListe[i].lvl = 1;
         gegnerLvl = gegnerListe[i].lvl;
         gegnerName = gegnerListe[i].name;
-        gegnerMaxHp = gegnerListe[i].maxHp*gegnerListe[i].lvl;
+        gegnerMaxHp = gegnerListe[i].maxHp * gegnerListe[i].lvl;
         gegnerHp = gegnerMaxHp;
-        gegnerMaxMp = gegnerListe[i].maxMp*gegnerListe[i].lvl;
-        gegnerMp = gegnerMaxMp;
-        gegnerAtk = gegnerListe[i].attack()*gegnerListe[i].lvl;
-        gegnerDef = gegnerListe[i].defend()*gegnerListe[i].lvl;
+        gegnermaxSp = gegnerListe[i].maxSp * gegnerListe[i].lvl;
+        gegnerSp = gegnermaxSp;
+        gegnerAtk = gegnerListe[i].atk;
+        gegnerDef = gegnerListe[i].def;
         gegnerExp = gegnerListe[i].exp;
+        gegnerStr = gegnerListe[i].str;
+        gegnerDex = gegnerListe[i].dex;
+        gegnerKno = gegnerListe[i].kno;
+        gegnerWis = gegnerListe[i].wis;
         gegnerHealthBar.setMaximum(gegnerMaxHp);
         updateGegnerHp();
         gegnerInfoPanel.setVisible(true);
-        ImageIcon gegnerBild = new ImageIcon("res/Gegner/"+gegnerListe[i].name+".png");
+        ImageIcon gegnerBild = new ImageIcon("res/Gegner/" + gegnerListe[i].name + ".png");
         gegnerBildLbl.setVisible(true);
         gegnerBildLbl.setIcon(gegnerBild);
     }
-    public static void adminFenster(){
+    public static void adminFenster() {
         adminFrame = new JFrame("Admin");
         adminPanel = new JPanel();
         conAdmin = new Container();
@@ -203,7 +231,7 @@ public class Main {
             logTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
         });
         adminBtn3.addActionListener(e -> {
-            spielerExp = spielerExp + 20.4;
+            spielerExp = spielerExp + 3.4;
             updateSpielerStats();
         });
         adminBtn4.addActionListener(e -> {
@@ -218,12 +246,12 @@ public class Main {
             Gegner.schneemann.lvl = 1;
             gegnerLvl = Gegner.schneemann.lvl;
             gegnerName = Gegner.schneemann.name;
-            gegnerMaxHp = Gegner.schneemann.maxHp*Gegner.schneemann.lvl;
+            gegnerMaxHp = Gegner.schneemann.maxHp * Gegner.schneemann.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.schneemann.maxMp*Gegner.schneemann.lvl;
-            gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.schneemann.attack()*Gegner.schneemann.lvl;
-            gegnerDef = Gegner.schneemann.defend()*Gegner.schneemann.lvl;
+            gegnermaxSp = Gegner.schneemann.maxSp * Gegner.schneemann.lvl;
+            gegnerSp = gegnermaxSp;
+            gegnerAtk = Gegner.schneemann.atk;
+            gegnerDef = Gegner.schneemann.def;
             gegnerExp = Gegner.schneemann.exp;
             gegnerHealthBar.setMaximum(gegnerMaxHp);
             updateGegnerHp();
@@ -233,23 +261,23 @@ public class Main {
             gegnerBildLbl.setIcon(gegnerBild);
         });
         adminBtn7.addActionListener(e -> {
-            kampf();
+            spielerAngriff();
         });
         adminBtn8.addActionListener(e -> {
             Gegner.fledermaus.lvl = 1;
             gegnerLvl = Gegner.fledermaus.lvl;
             gegnerName = Gegner.fledermaus.name;
-            gegnerMaxHp = Gegner.fledermaus.maxHp*Gegner.fledermaus.lvl;
+            gegnerMaxHp = Gegner.fledermaus.maxHp * Gegner.fledermaus.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.fledermaus.maxMp*Gegner.fledermaus.lvl;
-            gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.fledermaus.attack()*Gegner.fledermaus.lvl;
-            gegnerDef = Gegner.fledermaus.defend()*Gegner.fledermaus.lvl;
+            gegnermaxSp = Gegner.fledermaus.maxSp * Gegner.fledermaus.lvl;
+            gegnerSp = gegnermaxSp;
+            gegnerAtk = Gegner.fledermaus.atk;
+            gegnerDef = Gegner.fledermaus.def;
             gegnerExp = Gegner.fledermaus.exp;
             gegnerHealthBar.setMaximum(gegnerMaxHp);
             updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
-            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Bat.png");
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Fledermaus.png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
@@ -257,17 +285,17 @@ public class Main {
             Gegner.oger.lvl = 1;
             gegnerLvl = Gegner.oger.lvl;
             gegnerName = Gegner.oger.name;
-            gegnerMaxHp = Gegner.oger.maxHp*Gegner.oger.lvl;
+            gegnerMaxHp = Gegner.oger.maxHp * Gegner.oger.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.oger.maxMp*Gegner.oger.lvl;
-            gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.oger.attack()*Gegner.oger.lvl;
-            gegnerDef = Gegner.oger.defend()*Gegner.oger.lvl;
+            gegnermaxSp = Gegner.oger.maxSp * Gegner.oger.lvl;
+            gegnerSp = gegnermaxSp;
+            gegnerAtk = Gegner.oger.atk;
+            gegnerDef = Gegner.oger.def;
             gegnerExp = Gegner.oger.exp;
             gegnerHealthBar.setMaximum(gegnerMaxHp);
             updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
-            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Ogre.png");
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Oger.png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
@@ -275,17 +303,17 @@ public class Main {
             Gegner.geist.lvl = 1;
             gegnerLvl = Gegner.geist.lvl;
             gegnerName = Gegner.geist.name;
-            gegnerMaxHp = Gegner.geist.maxHp*Gegner.geist.lvl;
+            gegnerMaxHp = Gegner.geist.maxHp * Gegner.geist.lvl;
             gegnerHp = gegnerMaxHp;
-            gegnerMaxMp = Gegner.geist.maxMp*Gegner.geist.lvl;
-            gegnerMp = gegnerMaxMp;
-            gegnerAtk = Gegner.geist.attack()*Gegner.geist.lvl;
-            gegnerDef = Gegner.geist.defend()*Gegner.geist.lvl;
+            gegnermaxSp = Gegner.geist.maxSp * Gegner.geist.lvl;
+            gegnerSp = gegnermaxSp;
+            gegnerAtk = Gegner.geist.atk;
+            gegnerDef = Gegner.geist.def;
             gegnerExp = Gegner.geist.exp;
             gegnerHealthBar.setMaximum(gegnerMaxHp);
             updateGegnerHp();
             gegnerInfoPanel.setVisible(true);
-            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Ghost.png");
+            ImageIcon gegnerBild = new ImageIcon("res/Gegner/Geist.png");
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
@@ -298,7 +326,7 @@ public class Main {
             randomEncounterTier1();
         });
         adminBtn13.addActionListener(e -> {
-            if (encounterAktiv == false){
+            if (encounterAktiv == false) {
                 encounterAktiv = true;
                 System.out.println(encounterAktiv);
             } else {
@@ -309,105 +337,133 @@ public class Main {
 
         conAdmin = adminFrame.getContentPane();
         conAdmin.add(adminPanel);
-        adminFrame.setPreferredSize(new Dimension(400,300));
+        adminFrame.setPreferredSize(new Dimension(400, 300));
         adminFrame.setResizable(false);
         adminFrame.pack();
         adminFrame.setVisible(true);
     }
-    public static void updateSpielerStats(){
+    public static void updateSpielerStats() {
         checkExp();
+
         statSpielerName.setText(spielerName);
-        statSpielerExp.setText(String.format(Locale.US,"%.2f",spielerExp));
-        statSpielerLvl.setText(""+spielerLvl);
-        statSpielerHp.setText(spielerHp+"/"+spielerMaxHp);
-        statSpielerMp.setText(spielerMp+"/"+spielerMaxMp);
-        statSpielerAtk.setText(""+spielerAtk);
-        statSpielerDef.setText(""+spielerDef);
-        statSpielerStr.setText(""+spielerStr);
-        statSpielerDex.setText(""+spielerDex);
-        statSpielerKno.setText(""+spielerKno);
-        statSpielerWis.setText(""+spielerWis);
-        spielerHealthBar.setValue(spielerHp);
-        spielerExpBar.setValue((int)spielerExp);
-        spielerExpBar.setMaximum((int)expNeed());
+        statSpielerExp.setText(String.format(Locale.US, "%.2f", spielerExp));
+        statSpielerLvl.setText("" + spielerLvl);
+        statSpielerHp.setText(spielerHp + "/" + spielerMaxHp);
+        statspielerSp.setText(spielerSp + "/" + spielerMaxSp);
+        statSpielerAtk.setText("" + spielerAtk);
+        statSpielerDef.setText("" + spielerDef);
+        statSpielerStr.setText("" + spielerStr);
+        statSpielerDex.setText("" + spielerDex);
+        statSpielerKno.setText("" + spielerKno);
+        statSpielerWis.setText("" + spielerWis);
+        spielerHpBar.setValue(spielerHp);;
+        spielerSpBar.setValue(spielerSp);
+        spielerExpBar.setValue((int) spielerExp);
+        spielerExpBar.setMaximum((int) expNeed());
     }
-    public static void skillpoints(){
+    public static void skillpoints() {
         skillpoints += 2;
         strUpBtn.setVisible(true);
         dexUpBtn.setVisible(true);
         knoUpBtn.setVisible(true);
         wisUpBtn.setVisible(true);
     }
-    static void checkExp(){
-            if(spielerExp >= (expNeed())){
-                System.out.println(spielerLvl);
-                spielerExpBar.setMinimum(5 * (spielerLvl*spielerLvl) - (5 * spielerLvl));
-                spielerLvl++;
-                skillpoints();
-
-                statSpielerLvl.setText(""+spielerLvl);
-                spielerMaxHp *= spielerLvl;
-                spielerHp = spielerMaxHp;
-                spielerMaxMp *= spielerLvl;
-                spielerMp = spielerMaxMp;
-                statSpielerExp.setText(""+(String.format(Locale.US,"%.2f",spielerExp)+"%"));
-                spielerAtk *= spielerLvl;
-                spielerDef *= spielerLvl;
-                spielerHealthBar.setMaximum(spielerMaxHp);
-                updateSpielerStats();
+    public static void wait(int ms) {
+        Timer timer = new Timer(ms, e -> {
+            checkLeben();
+            if (gegnerHp > 0){
+                gegnerAngriff();
             }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
-    static double expNeed(){
+    static void checkExp() {
+        if (spielerExp >= (expNeed())) {
+            spielerExpBar.setMinimum(5 * (spielerLvl * spielerLvl) - (5 * spielerLvl));
+            spielerLvl++;
+            skillpoints();
+
+            statSpielerLvl.setText("" + spielerLvl);
+            spielerMaxHp += (spielerHpMod);
+            spielerHp = spielerMaxHp;
+            spielerMaxSp += (spielerSpMod);
+            spielerSp = spielerMaxSp;
+            statSpielerExp.setText("" + (String.format(Locale.US, "%.2f", spielerExp) + "%"));
+            spielerAtk += spielerLvl;
+            spielerDef += spielerLvl;
+            spielerHpBar.setMaximum(spielerMaxHp);
+            spielerSpBar.setMaximum(spielerMaxSp);
+            updateSpielerStats();
+        }
+    }
+    static double expNeed() {
         if (spielerLvl == 1) {
             return 5;
-        }else {
-            return (5 * (spielerLvl*spielerLvl) - (5 * spielerLvl));
+        } else {
+            return (5 * (spielerLvl * spielerLvl) - (5 * spielerLvl));
         }
     }
-    public static void updateGegnerHp(){
+    public static void updateGegnerHp() {
         spielGegnerName.setText(gegnerName);
-        spielGegnerLvl.setText("Level: "+gegnerLvl);
-        spielGegnerHp.setText("HP: "+gegnerHp+"/"+gegnerMaxHp);
+        spielGegnerLvl.setText("Level: " + gegnerLvl);
+        spielGegnerHp.setText("HP: " + gegnerHp + "/" + gegnerMaxHp);
         gegnerHealthBar.setValue(gegnerHp);
     }
-    public static void kampf(){
-        int angriff = spielerAtk - gegnerDef;
-        int schaden = gegnerAtk - spielerDef;
-
-        if (angriff <= 0){
-            angriff = 0;
+    public static void spielerAngriff() {
+        if(gegnerHp > 0){
+            if (angriff <= 0) {
+                angriff = 0;
+            }
+            gegnerHp -= angriff;
+            logTextArea.append("\n" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
+            mainTextLbl.setText("<html>" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
+            if (gegnerHp <= 0) {
+                gegnerHp = 0;
+            }
+            wait(700);
+            updateGegnerHp();
+            updateSpielerStats();
         }
+    }
+    public static void spielerBesiegt(){
+            spielerHp = 0;
+            logTextArea.append("\nGestorben...");
+            mainTextLbl.setText(mainTextLbl.getText()+"<br>Gestorben...!");
+            updateSpielerStats();
+            updateGegnerHp();
+    }
+    public static void checkLeben(){
+        if (spielerHp <= 0) {
+            spielerBesiegt();
+        }
+        if (gegnerHp <= 0) {
+            gegnerBesiegt();
+        }
+    }
+    public static void gegnerAngriff(){
         if (schaden <= 0){
             schaden = 0;
         }
-
-        if((spielerHp > 0) && (gegnerHp > 0)){
-            gegnerHp -= angriff;
-            logTextArea.append("\n"+spielerName+" verursacht "+angriff+" Schaden an "+ gegnerName+"!");
-            mainTextLbl.setText("<html>"+spielerName+" verursacht "+angriff+" Schaden an "+gegnerName+"!");
-            if (gegnerHp > 0) {
-                spielerHp -= schaden;
-                spielerHealthBar.setValue(spielerHp);
-                logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
-                mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
-                if (spielerHp <= 0){
-                    spielerHp = 0;
-                    logTextArea.append("\nGestorben...");
-                    mainTextLbl.setText(mainTextLbl.getText()+"<br>Gestorben...!");
-                }
-            } else{
-                gegnerHp = 0;
-                logTextArea.append("\nGewonnen!\n"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
-                mainTextLbl.setText(mainTextLbl.getText()+"<br>Gewonnen!<br>"+(String.format(Locale.US,"%.2f",gegnerExp))+" Erfahrungspunkte erhalten.");
-                spielerExp += gegnerExp;
-                gegnerBildLbl.setVisible(false);
-                gegnerInfoPanel.setVisible(false);
-                updateSpielerStats();
-            }
+        spielerHp -= schaden;
+        spielerHpBar.setValue(spielerHp);
+        logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+        mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+        if (spielerHp <= 0) {
+            spielerHp = 0;
         }
-
-        updateSpielerStats();
         updateGegnerHp();
+        updateSpielerStats();
+    }
+    public static void gegnerBesiegt(){
+            gegnerHp = 0;
+            logTextArea.append("\nGewonnen!\n" + (String.format(Locale.US, "%.2f", gegnerExp)) + " Erfahrungspunkte erhalten.");
+            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!<br>" + (String.format(Locale.US, "%.2f", gegnerExp)) + " Erfahrungspunkte erhalten.");
+            spielerExp += gegnerExp;
+            gegnerBildLbl.setVisible(false);
+            gegnerInfoPanel.setVisible(false);
+            updateSpielerStats();
+            updateGegnerHp();
     }
     public static void spielFenster(){
         //region Layout
@@ -438,7 +494,8 @@ public class Main {
         spielerProgressPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
         spielerProgressPanel.setLayout(spielerProgressLayout);
 
-        spielerHealthBar = new JProgressBar(0,spielerMaxHp);
+        spielerHpBar = new JProgressBar(0,spielerMaxHp);
+        spielerSpBar = new JProgressBar(0,spielerMaxSp);
         spielerExpBar = new JProgressBar();
 
         ImageIcon einstellungIcon = new ImageIcon("res/Settings.png");
@@ -453,26 +510,13 @@ public class Main {
         optionenPanel.add(logBtn);
         //endregion
         //region Skillbuttons
-        skillBtn1 = new JButton(Skills.hexerSkill1.bild);
-        skillBtn2 = new JButton(Skills.hexerSkill2.bild);
-        skillBtn3 = new JButton(Skills.hexerSkill3.bild);
-        skillBtn4 = new JButton(Skills.hexerSkill4.bild);
-        skillBtn5 = new JButton(Skills.hexerSkill5.bild);
 //        skillBtn6 = new JButton(Skills.hexerSkill6);
 //        skillBtn7 = new JButton(Skills.hexerSkill7);
 //        skillBtn8 = new JButton(Skills.hexerSkill8);
-
-        skillBtn1.setPreferredSize(new Dimension(50,50));
-        skillBtn2.setPreferredSize(new Dimension(50,50));
-        skillBtn3.setPreferredSize(new Dimension(50,50));
-        skillBtn4.setPreferredSize(new Dimension(50,50));
-        skillBtn5.setPreferredSize(new Dimension(50,50));
 //        skillBtn6.setPreferredSize(new Dimension(50,50));
 //        skillBtn7.setPreferredSize(new Dimension(50,50));
 //        skillBtn8.setPreferredSize(new Dimension(50,50));
 
-        skillBtn1.setToolTipText("<html><font color='green'>Skill 1</font><br>lklk<br>izztf");
-        skillBtn5.setEnabled(false);
         //region layout
         skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn1,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
         skillBtnLayout.putConstraint(SpringLayout.VERTICAL_CENTER,skillBtn2,0,SpringLayout.VERTICAL_CENTER,skillBtnPanel);
@@ -525,8 +569,8 @@ public class Main {
         statSpielerHp = new JLabel(spielerHp+"/"+spielerMaxHp);
         statSpielerLvlLbl = new JLabel("Level");
         statSpielerLvl = new JLabel(""+spielerLvl);
-        statSpielerMpLbl = new JLabel("MP");
-        statSpielerMp = new JLabel(spielerMp+"/"+spielerMaxMp);
+        statspielerSpLbl = new JLabel("SP");
+        statspielerSp = new JLabel(spielerSp+"/"+spielerMaxSp);
         statSpielerExpLbl = new JLabel("EXP");
         statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spielerExp)+"%");
 
@@ -556,8 +600,8 @@ public class Main {
         statSpielerHp.setFont(statFont);
         statSpielerLvlLbl.setFont(statFont);
         statSpielerLvl.setFont(statFont);
-        statSpielerMpLbl.setFont(statFont);
-        statSpielerMp.setFont(statFont);
+        statspielerSpLbl.setFont(statFont);
+        statspielerSp.setFont(statFont);
         statSpielerExpLbl.setFont(statFont);
         statSpielerExp.setFont(statFont);
         statSpielerAtkLbl.setFont(statFont);
@@ -573,10 +617,15 @@ public class Main {
         statSpielerWisLbl.setFont(statFont);
         statSpielerWis.setFont(statFont);
 
-        spielerHealthBar.setFont(barFont);
-        spielerHealthBar.setStringPainted(true);
-        spielerHealthBar.setForeground(Color.decode("#C70039"));
-        spielerHealthBar.setPreferredSize(new Dimension(180,20));
+        spielerHpBar.setFont(barFont);
+        spielerHpBar.setStringPainted(true);
+        spielerHpBar.setForeground(Color.decode("#C70039"));
+        spielerHpBar.setPreferredSize(new Dimension(180,20));
+
+        spielerSpBar.setFont(barFont);
+        spielerSpBar.setStringPainted(true);
+        spielerSpBar.setForeground(Color.decode("#234ba1"));
+        spielerSpBar.setPreferredSize(new Dimension(180,20));
 
         spielerExpBar.setFont(barFont);
         spielerExpBar.setStringPainted(true);
@@ -587,8 +636,9 @@ public class Main {
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,statSpielerName,0, SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerLvlLbl,20, SpringLayout.WEST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerHpLbl,20, SpringLayout.WEST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerHealthBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.WEST,statSpielerMpLbl,20, SpringLayout.WEST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerHpBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerSpBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.WEST,statspielerSpLbl,20, SpringLayout.WEST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.WEST,statSpielerExpLbl,20, SpringLayout.WEST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,spielerExpBar,0,SpringLayout.HORIZONTAL_CENTER,spielerStatsPanel);
 
@@ -599,12 +649,13 @@ public class Main {
         spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerKnoLbl, 20, SpringLayout.WEST,spielerProgressPanel);
         spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerWisLbl, 20, SpringLayout.WEST,spielerProgressPanel);
 
-        layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,10, SpringLayout.SOUTH,statSpielerName);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,5, SpringLayout.SOUTH,statSpielerName);
         layout.putConstraint(SpringLayout.NORTH,statSpielerHpLbl,10, SpringLayout.SOUTH,statSpielerLvlLbl);
-        layout.putConstraint(SpringLayout.NORTH,spielerHealthBar,5, SpringLayout.SOUTH,statSpielerHpLbl);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerMpLbl,10, SpringLayout.SOUTH,spielerHealthBar);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerExpLbl,10, SpringLayout.SOUTH,statSpielerMpLbl);
-        layout.putConstraint(SpringLayout.NORTH,spielerExpBar,5, SpringLayout.SOUTH,statSpielerExpLbl);
+        layout.putConstraint(SpringLayout.NORTH,spielerHpBar,3, SpringLayout.SOUTH,statSpielerHpLbl);
+        layout.putConstraint(SpringLayout.NORTH,statspielerSpLbl,10, SpringLayout.SOUTH,spielerHpBar);
+        layout.putConstraint(SpringLayout.NORTH,spielerSpBar,3, SpringLayout.SOUTH,statspielerSpLbl);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExpLbl,10, SpringLayout.SOUTH,spielerSpBar);
+        layout.putConstraint(SpringLayout.NORTH,spielerExpBar,3, SpringLayout.SOUTH,statSpielerExpLbl);
 
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerAtkLbl,10, SpringLayout.NORTH,spielerProgressPanel);
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDefLbl,10, SpringLayout.SOUTH,statSpielerAtkLbl);
@@ -615,7 +666,7 @@ public class Main {
 
         //layout rechts
         layout.putConstraint(SpringLayout.EAST,statSpielerHp,-20, SpringLayout.EAST,spielerStatsPanel);
-        layout.putConstraint(SpringLayout.EAST,statSpielerMp,-20, SpringLayout.EAST,spielerStatsPanel);
+        layout.putConstraint(SpringLayout.EAST,statspielerSp,-20, SpringLayout.EAST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.EAST,statSpielerExp,-20, SpringLayout.EAST,spielerStatsPanel);
         layout.putConstraint(SpringLayout.EAST,statSpielerLvl,-20, SpringLayout.EAST,spielerStatsPanel);
 
@@ -626,10 +677,10 @@ public class Main {
         spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerKno,-20, SpringLayout.EAST,spielerProgressPanel);
         spielerProgressLayout.putConstraint(SpringLayout.EAST,statSpielerWis,-20, SpringLayout.EAST,spielerProgressPanel);
 
-        layout.putConstraint(SpringLayout.NORTH,statSpielerLvl,10, SpringLayout.SOUTH,statSpielerName);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerLvl,5, SpringLayout.SOUTH,statSpielerName);
         layout.putConstraint(SpringLayout.NORTH,statSpielerHp,10, SpringLayout.SOUTH,statSpielerLvl);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerMp,10, SpringLayout.SOUTH,spielerHealthBar);
-        layout.putConstraint(SpringLayout.NORTH,statSpielerExp,10, SpringLayout.SOUTH,statSpielerMp);
+        layout.putConstraint(SpringLayout.NORTH,statspielerSp,10, SpringLayout.SOUTH,spielerHpBar);
+        layout.putConstraint(SpringLayout.NORTH,statSpielerExp,10, SpringLayout.SOUTH,spielerSpBar);
 
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerAtk,10, SpringLayout.NORTH,spielerProgressPanel);
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,statSpielerDef,10, SpringLayout.SOUTH,statSpielerAtk);
@@ -652,11 +703,12 @@ public class Main {
         spielerStatsPanel.add(statSpielerName);
         spielerStatsPanel.add(statSpielerHpLbl);
         spielerStatsPanel.add(statSpielerHp);
-        spielerStatsPanel.add(spielerHealthBar);
+        spielerStatsPanel.add(spielerHpBar);
+        spielerStatsPanel.add(spielerSpBar);
         spielerStatsPanel.add(statSpielerLvlLbl);
         spielerStatsPanel.add(statSpielerLvl);
-        spielerStatsPanel.add(statSpielerMpLbl);
-        spielerStatsPanel.add(statSpielerMp);
+        spielerStatsPanel.add(statspielerSpLbl);
+        spielerStatsPanel.add(statspielerSp);
         spielerStatsPanel.add(statSpielerExpLbl);
         spielerStatsPanel.add(statSpielerExp);
         spielerStatsPanel.add(spielerExpBar);
@@ -684,6 +736,8 @@ public class Main {
         strUpBtn.addActionListener(e -> {
             skillpoints--;
             spielerStr++;
+            spielerMaxHp += 2;
+            spielerHp += 2;
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
@@ -706,6 +760,8 @@ public class Main {
         knoUpBtn.addActionListener(e -> {
             skillpoints--;
             spielerKno++;
+            spielerMaxSp += 2;
+            spielerSp += 2;
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
@@ -717,6 +773,10 @@ public class Main {
         wisUpBtn.addActionListener(e -> {
             skillpoints--;
             spielerWis++;
+            spielerMaxHp++;
+            spielerHp++;
+            spielerMaxSp++;
+            spielerSp++;
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
@@ -934,6 +994,44 @@ public class Main {
         con.revalidate();
         con.repaint();
     }
+    public static void skillLeiste(){
+        skill1Name = Skills.hexerSkill1.name;
+        skill1Kraft = Skills.hexerSkill1.kraft;
+        skill1Genauigkeit = Skills.hexerSkill1.genauigkeit;
+        skill1Mod = Skills.hexerSkill1.mod;
+        skill1Bild = Skills.hexerSkill1.bild;
+
+        skillBtn1.setIcon(skill1Bild);
+        skillBtn1.setToolTipText("<html><p><font color='red' size='5' face='Segoe UI'>"
+                +skill1Name+"</p></font>" +"<p><font size='4' face='Segoe UI'>Kraft: "
+                +skill1Kraft+"<br>Genauigkeit: "
+                +skill1Genauigkeit+"</p></font>");
+        skillBtn1.addActionListener(e -> {
+            switch (skill1Mod){
+                case "str":
+                    angriff = (spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerStr/2));
+                    spielerAngriff();
+                    break;
+                case "dex":
+                    angriff = (spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerDex/2));
+                    spielerAngriff();
+                    break;
+                case "kno":
+                    angriff = (spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerKno/2));
+                    spielerAngriff();
+                    break;
+                case "wis":
+                    angriff = (spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerWis/2));
+                    spielerAngriff();
+                    break;
+            }
+        });
+
+    }
     public static void charakterAuswahl(){
         //region layout
         auswahlPanelLinks = new JPanel();
@@ -1004,8 +1102,8 @@ public class Main {
             spielerName = Spieler.krieger.name;
             spielerMaxHp = Spieler.krieger.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.krieger.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.krieger.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.krieger.atk+Spieler.krieger.str;
             spielerDef = Spieler.krieger.def;
             spielerExp = Spieler.krieger.exp;
@@ -1014,10 +1112,15 @@ public class Main {
             spielerDex = Spieler.krieger.dex;
             spielerKno = Spieler.krieger.kno;
             spielerWis = Spieler.krieger.wis;
+            spielerHpMod = Spieler.krieger.hpMod;
+            spielerSpMod = Spieler.krieger.spMod;
+
+            skillBtn1.setIcon(Skills.hexerSkill1.bild);
+
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Krieger.png");
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1028,8 +1131,8 @@ public class Main {
             spielerName = Spieler.jaeger.name;
             spielerMaxHp = Spieler.jaeger.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.jaeger.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.jaeger.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.jaeger.atk+Spieler.jaeger.dex;
             spielerDef = Spieler.jaeger.def;
             spielerExp = Spieler.jaeger.exp;
@@ -1038,11 +1141,13 @@ public class Main {
             spielerDex = Spieler.jaeger.dex;
             spielerKno = Spieler.jaeger.kno;
             spielerWis = Spieler.jaeger.wis;
+            spielerHpMod = Spieler.jaeger.hpMod;
+            spielerSpMod = Spieler.jaeger.spMod;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Jaeger.png");
             vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1052,8 +1157,8 @@ public class Main {
             spielerName = Spieler.magier.name;
             spielerMaxHp = Spieler.magier.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.magier.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.magier.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.magier.atk+Spieler.magier.kno;
             spielerDef = Spieler.magier.def;
             spielerExp = Spieler.magier.exp;
@@ -1062,11 +1167,13 @@ public class Main {
             spielerDex = Spieler.magier.dex;
             spielerKno = Spieler.magier.kno;
             spielerWis = Spieler.magier.wis;
+            spielerHpMod = Spieler.magier.hpMod;
+            spielerSpMod = Spieler.magier.spMod;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Magier.png");
             vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1076,8 +1183,8 @@ public class Main {
             spielerName = Spieler.priester.name;
             spielerMaxHp = Spieler.priester.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.priester.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.priester.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.priester.atk+Spieler.priester.wis;
             spielerDef = Spieler.priester.def;
             spielerExp = Spieler.priester.exp;
@@ -1086,11 +1193,13 @@ public class Main {
             spielerDex = Spieler.priester.dex;
             spielerKno = Spieler.priester.kno;
             spielerWis = Spieler.priester.wis;
+            spielerHpMod = Spieler.priester.hpMod;
+            spielerSpMod = Spieler.priester.spMod;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Priester.png");
             vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1113,8 +1222,8 @@ public class Main {
             spielerName = Spieler.paladin.name;
             spielerMaxHp = Spieler.paladin.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.paladin.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.paladin.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.paladin.atk+Spieler.paladin.str;
             spielerDef = Spieler.paladin.def;
             spielerExp = Spieler.paladin.exp;
@@ -1123,11 +1232,13 @@ public class Main {
             spielerDex = Spieler.paladin.dex;
             spielerKno = Spieler.paladin.kno;
             spielerWis = Spieler.paladin.wis;
+            spielerHpMod = Spieler.paladin.hpMod;
+            spielerSpMod = Spieler.paladin.spMod;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Paladin.png");
             vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1137,8 +1248,8 @@ public class Main {
             spielerName = Spieler.ninja.name;
             spielerMaxHp = Spieler.ninja.maxHp;
             spielerHp = spielerMaxHp;
-            spielerMaxMp = Spieler.ninja.maxMp;
-            spielerMp = spielerMaxMp;
+            spielerMaxSp = Spieler.ninja.maxSp;
+            spielerSp = spielerMaxSp;
             spielerAtk = Spieler.ninja.atk+Spieler.ninja.str;
             spielerDef = Spieler.ninja.def;
             spielerExp = Spieler.ninja.exp;
@@ -1147,11 +1258,13 @@ public class Main {
             spielerDex = Spieler.ninja.dex;
             spielerKno = Spieler.ninja.kno;
             spielerWis = Spieler.ninja.wis;
+            spielerHpMod = Spieler.ninja.hpMod;
+            spielerSpMod = Spieler.ninja.spMod;
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Ninja.png");
             vorschauLbl.setIcon(vorschauBild);
             vorschauStatsName.setText(spielerName);
-            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>MP: "+
-                    spielerMp+"/"+spielerMaxMp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
+            vorschauStatsLblLinks.setText("<html>HP: "+spielerHp+"/"+spielerMaxHp+"<br>SP: "+
+                    spielerSp+"/"+spielerMaxSp+"<br>Atk: "+spielerAtk+"<br>Def: "+spielerDef+"</html>");
             vorschauStatsLblRechts.setText("<html><font color='#ff0000'>Str: </font>"+spielerStr+
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
@@ -1181,7 +1294,9 @@ public class Main {
         public void actionPerformed(ActionEvent e){
             mapInitialisieren();
             gegnerInitialisieren();
+            btnInitialisieren();
             charakterAuswahl();
+            skillLeiste();
             adminFenster();
         }
     }

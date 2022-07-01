@@ -2,41 +2,37 @@ public abstract class Charaktere {
     public String name;
     public int maxHp;
     public int hp;
-    public int maxMp;
-    public int mp;
+    public int maxSp;
+    public int sp;
     public int str;
     public int dex;
     public int kno;
     public int wis;
     public int atk;
     public int def;
-    public int vit;
-    public int lck;
+    public int hpMod;
+    public int spMod;
+    public String mod;
     public int lvl;
     public double exp;
 
-    public Charaktere(String name, int maxHp, int maxMp, int str, int dex, int kno, int wis,
-                      int atk, int def, int vit, int lck, double exp, int lvl){
+    public Charaktere(String name, int maxHp, int maxSp, int str, int dex, int kno, int wis,
+                      String mod, int atk, int def, int hpMod, int spMod, double exp, int lvl){
         this.name = name;
         this.maxHp = maxHp;
         this.hp = maxHp;
-        this.maxMp = maxMp;
-        this.mp = maxMp;
+        this.maxSp = maxSp;
+        this.sp = maxSp;
         this.str = str;
         this.dex = dex;
         this.kno = kno;
         this.wis = wis;
+        this.mod = mod;
         this.atk = atk;
         this.def = def;
-        this.vit = vit;
-        this.lck = lck;
+        this.hpMod = hpMod;
+        this.spMod = spMod;
         this.exp = exp;
         this.lvl = lvl;
     }
-    public abstract int attack();
-    public abstract int defend();
-
-
-
-
 }
