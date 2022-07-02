@@ -6,45 +6,45 @@ public class Gegner extends Charaktere{
 
     //region tier1
     static Gegner schneemann = new Gegner("Schneemann", 10,10,
-            0,0,0,0,"str",0,0, 3,2,1);
+            10,10,10,10,"str",0,0, 3,2,1);
 
     //str
     static Gegner puppe = new Gegner("Puppe", 15, 0,
-            0,0,0,0, "str",3, 2, 2,1, 1);
+            4,2,1,1, "str",3, 2, 2,1, 1);
     static Gegner sahagin = new Gegner("Sahagin", 15, 0,
-            0,0,0,0, "str",5, 4, 2,2, 1);
+            6,4,2,3, "str",5, 4, 2,2, 1);
     static Gegner skelettkrieger = new Gegner("Skelettkrieger", 25, 0,
-            0,0,0,0, "str",7, 5, 2,3, 1);
+            7,3,2,1, "str",7, 5, 2,3, 1);
     static Gegner werwolf = new Gegner("Werwolf", 30, 0,
-            0,0,0,0, "str",10, 3, 2,4, 1);
+            8,5,3,3, "str",10, 3, 2,4, 1);
 
     //dex
     static Gegner fledermaus = new Gegner("Fledermaus", 10, 0,
-            0,0,0,0, "dex",2, 4, 2,1, 1);
+            2,4,2,1, "dex",2, 4, 2,1, 1);
     static Gegner hornisse = new Gegner("Hornisse", 10, 0,
-            0,0,0,0, "dex",2, 5, 2,1, 1);
+            1,5,1,1, "dex",2, 5, 2,1, 1);
     static Gegner ratte = new Gegner("Ratte", 10, 0,
-            0,0,0,0, "dex",2, 3, 2,1, 1);
+            1,4,1,1, "dex",2, 3, 2,1, 1);
     static Gegner schlange = new Gegner("Schlange", 15, 0,
-            0,0,0,0, "dex",6, 5, 2,2, 1);
+            5,8,4,1, "dex",6, 5, 2,2, 1);
     static Gegner skorpion = new Gegner("Skorpion", 20, 0,
-            0,0,0,0, "dex",8, 4, 2,3, 1);
+            6,8,3,2, "dex",8, 4, 2,3, 1);
 
     //kno
     static Gegner pflanze = new Gegner("Pflanze", 15, 0,
-            0,0,0,0, "kno",5, 4, 2,2, 1);
+            2,2,4,2, "kno",5, 4, 2,2, 1);
     static Gegner imp = new Gegner("Imp", 10, 0,
-            0,0,0,0, "kno",3, 4, 2,1, 1);
+            1,2,3,1, "kno",3, 4, 2,1, 1);
 
     //wis
     static Gegner schleim = new Gegner("Schleim", 15, 0,
-            0,0,0,0, "wis",3, 6, 2,1, 1);
+            1,2,1,5, "wis",3, 6, 2,1, 1);
     static Gegner spinne = new Gegner("Spinne", 15, 0,
-            0,0,0,0, "wis",5, 4, 2,1, 1);
+            1,3,2,4, "wis",5, 4, 2,1, 1);
     static Gegner qualle = new Gegner("Qualle", 10, 0,
-            0,0,0,0, "wis",3, 2, 2,1, 1);
+            1,2,1,6, "wis",3, 2, 2,1, 1);
     static Gegner zombie = new Gegner("Zombie", 20, 0,
-            0,0,0,0, "wis",4, 3, 2,2, 1);
+            4,2,1,5, "wis",4, 3, 2,2, 1);
 
     //endregion
 

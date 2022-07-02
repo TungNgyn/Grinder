@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 import java.util.Random;
 
 import static java.lang.Math.round;
@@ -40,7 +39,7 @@ public class Main {
     private static JScrollPane logTextAreaScroll;
     private static JProgressBar spielerHpBar, spielerSpBar, spielerExpBar, gegnerHealthBar;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont, mainTextFont, vorschauFont, barFont;
-    static String gegnerName, spielerName, skill1Name, skill1Mod;
+    static String gegnerName, spielerName, skill1Name, skill1Mod, gegnerMod;
     static int gegnerHp, gegnerMaxHp, gegnerSp, gegnermaxSp, gegnerAtk, gegnerDef, gegnerLvl,
             spielerHp, spielerMaxHp, spielerSp, spielerMaxSp, spielerAtk, spielerDef, spielerLvl,
             spielerStr, spielerDex, spielerKno, spielerWis, spielerHpMod, spielerSpMod,
@@ -48,10 +47,10 @@ public class Main {
     static int skillpoints = 0;
     static int raumCounter = 0;
     static int gegnerExp, spielerExp;
-    static boolean encounterAktiv = false;
+    static JPanel gameOverPanel = new JPanel();
     static SpringLayout layout = new SpringLayout();
     static Random rnd = new Random();
-    static int angriff, schaden;
+    static int angriff, schaden, range1, range2;
     static String angriffMod, schadenMod;
     static ImageIcon skill1Bild;
 
@@ -199,6 +198,7 @@ public class Main {
         gegnerDex = gegnerListeT1[i].dex;
         gegnerKno = gegnerListeT1[i].kno;
         gegnerWis = gegnerListeT1[i].wis;
+        gegnerMod = gegnerListeT1[i].mod;
         gegnerHealthBar.setMaximum(gegnerMaxHp);
         updateGegnerHp();
         gegnerInfoPanel.setVisible(true);
@@ -224,7 +224,7 @@ public class Main {
         adminBtn10 = new JButton("Geist");
         adminBtn11 = new JButton("Skill1 ändern");
         adminBtn12 = new JButton("Random Encounter");
-        adminBtn13 = new JButton("Encounter an/aus");
+        adminBtn13 = new JButton("Game Over");
 
         adminPanel.add(adminBtn1);
         adminPanel.add(adminBtn2);
@@ -342,13 +342,7 @@ public class Main {
             randomEncounterTier1();
         });
         adminBtn13.addActionListener(e -> {
-            if (encounterAktiv == false) {
-                encounterAktiv = true;
-                System.out.println(encounterAktiv);
-            } else {
-                encounterAktiv = false;
-                System.out.println(encounterAktiv);
-            }
+            gameOverScreen();
         });
 
         conAdmin = adminFrame.getContentPane();
@@ -455,6 +449,7 @@ public class Main {
             mainTextLbl.setText(mainTextLbl.getText()+"<br>Gestorben...!");
             updateSpielerStats();
             updateGegnerHp();
+            gameOverScreen();
     }
     public static void checkLeben(){
         if (spielerHp <= 0) {
@@ -467,6 +462,53 @@ public class Main {
         }
     }
     public static void gegnerAngriff(){
+        switch (gegnerMod) {
+            case "str":
+                range1 = (gegnerAtk+(gegnerStr/2))-
+                        (spielerDef+(spielerStr/2));
+                range2 = ((gegnerAtk+(gegnerStr/2))-
+                        (spielerDef+(spielerStr/2)))*2;
+                if (range1 <= 0 ){
+                    range1 = 0;
+                    range2 = 1;
+                }
+                schaden = rnd.nextInt(range1, range2);
+                break;
+            case "dex":
+                range1 = (gegnerAtk+(gegnerDex/2))-
+                        (spielerDef+(spielerDex/2));
+                range2 = ((gegnerAtk+(gegnerDex/2))-
+                        (spielerDef+(spielerDex/2)))*2;
+                if (range1 <= 0 ){
+                    range1 = 0;
+                    range2 = 1;
+                }
+                schaden = rnd.nextInt(range1, range2);
+                break;
+            case "kno":
+                range1 = (gegnerAtk+(gegnerKno/2))-
+                        (spielerDef+(spielerKno/2));
+                range2 = ((gegnerAtk+(gegnerKno/2))-
+                        (spielerDef+(spielerKno/2)))*2;
+                if (range1 <= 0 ){
+                    range1 = 0;
+                    range2 = 1;
+                }
+                schaden = rnd.nextInt(range1, range2);
+                break;
+            case "wis":
+                range1 = (gegnerAtk+(gegnerWis/2))-
+                        (spielerDef+(spielerWis/2));
+                range2 = ((gegnerAtk+(gegnerWis/2))-
+                        (spielerDef+(spielerWis/2)))*2;
+                if (range1 <= 0 ){
+                    range1 = 0;
+                    range2 = 1;
+                }
+                schaden = rnd.nextInt(range1, range2);
+                break;
+        }
+
         if (schaden <= 0){
             schaden = 0;
         }
@@ -476,6 +518,7 @@ public class Main {
         mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
         if (spielerHp <= 0) {
             spielerHp = 0;
+            spielerBesiegt();
         }
         updateGegnerHp();
         updateSpielerStats();
@@ -1059,23 +1102,35 @@ public class Main {
         skillBtn1.addActionListener(e -> {
             switch (skill1Mod){
                 case "str":
-                    angriff = (spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
+                    range1 = (spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
                             (gegnerDef+(gegnerStr/2));
+                    range2 = ((spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerStr/2)))*2;
+                    angriff = rnd.nextInt(range1, range2);
                     spielerAngriff();
                     break;
                 case "dex":
-                    angriff = (spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
+                    range1 = (spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
                             (gegnerDef+(gegnerDex/2));
+                    range2 = ((spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerDex/2)))*2;
+                    angriff = rnd.nextInt(range1, range2);
                     spielerAngriff();
                     break;
                 case "kno":
-                    angriff = (spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
+                    range1 = (spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
                             (gegnerDef+(gegnerKno/2));
+                    range2 = ((spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerKno/2)))*2;
+                    angriff = rnd.nextInt(range1, range2);
                     spielerAngriff();
                     break;
                 case "wis":
-                    angriff = (spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
+                    range1 = (spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
                             (gegnerDef+(gegnerWis/2));
+                    range2 = ((spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
+                            (gegnerDef+(gegnerWis/2)))*2;
+                    angriff = rnd.nextInt(range1, range2);
                     spielerAngriff();
                     break;
             }
@@ -1349,5 +1404,33 @@ public class Main {
             skillLeiste();
             adminFenster();
         }
+    }
+    public static void delay(int ms){
+        Timer timer = new Timer(ms, e -> {
+            spielPanel.setVisible(false);
+            spielerStatsPanel.setVisible(false);
+            spielerProgressPanel.setVisible(false);
+            skillBtnPanel.setVisible(false);
+            textAreaPanel.setVisible(false);
+            optionenPanel.setVisible(false);
+            gameOverPanel.setVisible(true);
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+    public static void gameOverScreen(){
+        delay(1000);
+        gameOverPanel = new JPanel();
+        JLabel gameOverLbl = new JLabel("Game Over");
+        gameOverLbl.setFont(titelFont);
+        gameOverPanel.setBounds(100, 50, 600, 250);
+        gameOverPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        gameOverPanel.setVisible(false);
+
+        gameOverPanel.add(gameOverLbl);
+        con.add(gameOverPanel);
+        con.setVisible(true);
+        con.revalidate();
+        con.repaint();
     }
 }
