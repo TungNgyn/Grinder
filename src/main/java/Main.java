@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.Random;
 
+import static java.lang.Math.round;
+
 public class Main {
     private static JFrame adminFrame, mainFrame, logFrame;
     private static JPanel titelPanel, titelStartBtnPanel, spielPanel, skillBtnPanel,
@@ -25,7 +27,7 @@ public class Main {
             vorschauStatsLblRechts, vorschauStatsLblLinks, vorschauStatsName, gegnerBildLbl,
             naviLinksLinksLbl, naviLinksRechtsLbl, naviRechtsLinksLbl,
             naviRechtsRechtsLbl, pfeilHochLinks, pfeilHochRechts, naviLbl, naviTitelLbl,
-            naviEbeneLbl,
+            naviEbeneLbl, skillpointsLbl,
             statSpielerStr, statSpielerDex, statSpielerKno, statSpielerWis;
     private static JButton titelStartBtn, logBtn,  adminBtn1, adminBtn2, adminBtn3, adminBtn4, adminBtn5,
             adminBtn6, skillBtn1, skillBtn2, skillBtn3, skillBtn4, skillBtn5,
@@ -67,11 +69,11 @@ public class Main {
         skillBtn4 = new JButton();
         skillBtn5 = new JButton();
 
-            skillBtn1.setPreferredSize(btnDimension);
-            skillBtn2.setPreferredSize(btnDimension);
-            skillBtn3.setPreferredSize(btnDimension);
-            skillBtn4.setPreferredSize(btnDimension);
-            skillBtn5.setPreferredSize(btnDimension);
+        skillBtn1.setPreferredSize(btnDimension);
+        skillBtn2.setPreferredSize(btnDimension);
+        skillBtn3.setPreferredSize(btnDimension);
+        skillBtn4.setPreferredSize(btnDimension);
+        skillBtn5.setPreferredSize(btnDimension);
     }
     public static void main(String[] args) {new Main();}
     public Main() {
@@ -106,15 +108,15 @@ public class Main {
         titelStartBtnPanel.add(titelStartBtn);
         titelStartBtnPanel.setLayout(layout);
 
+        con = mainFrame.getContentPane();
+        con.add(titelStartBtnPanel);
+        con.add(titelPanel);
         mainFrame.pack();
         mainFrame.setLayout(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
         mainFrame.setResizable(false);
         mainFrame.setLocationRelativeTo(null);
-        con = mainFrame.getContentPane();
-        con.add(titelStartBtnPanel);
-        con.add(titelPanel);
 
         //region Textlogfenster
         logFrame = new JFrame("Textlog");
@@ -378,6 +380,7 @@ public class Main {
         dexUpBtn.setVisible(true);
         knoUpBtn.setVisible(true);
         wisUpBtn.setVisible(true);
+        skillpointsLbl.setVisible(true);
     }
     public static void wait(int ms) {
         Timer timer = new Timer(ms, e -> {
@@ -391,9 +394,10 @@ public class Main {
     }
     static void checkExp() {
         if (spielerExp >= (expNeed())) {
-            spielerExpBar.setMinimum(5 * (spielerLvl * spielerLvl) - (5 * spielerLvl));
+            spielerExpBar.setMinimum((int)Math.round(10*(Math.pow(spielerLvl,1.5))));
             spielerLvl++;
             skillpoints();
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
 
             statSpielerLvl.setText("" + spielerLvl);
             spielerMaxHp += (spielerHpMod);
@@ -409,11 +413,16 @@ public class Main {
         }
     }
     static double expNeed() {
-        if (spielerLvl == 1) {
-            return 5;
-        } else {
-            return (5 * (spielerLvl * spielerLvl) - (5 * spielerLvl));
-        }
+//        if (spielerLvl == 1) {
+//            return 20;
+//        } else if (spielerLvl == 2){
+//            return 40;
+//        } else {
+//            return (20 * (spielerLvl * spielerLvl) - (20 * spielerLvl));
+//        }
+        double exponent = 1.5;
+        double basisExp = 10;
+        return Math.round(basisExp*(Math.pow(spielerLvl,exponent)));
     }
     public static void updateGegnerHp() {
         spielGegnerName.setText(gegnerName);
@@ -594,6 +603,7 @@ public class Main {
         dexUpBtn = new JButton(statUp);
         knoUpBtn = new JButton(statUp);
         wisUpBtn = new JButton(statUp);
+        skillpointsLbl = new JLabel("(2) Skillpunkte zu vergeben.");
 
 
         JLabel statSpielerStrLbl = new JLabel("<html><font color='#ff0000'>Stärke");
@@ -710,6 +720,9 @@ public class Main {
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,knoUpBtn,10, SpringLayout.SOUTH,statSpielerDex);
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,wisUpBtn,10, SpringLayout.SOUTH,statSpielerKno);
 
+        spielerProgressLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,skillpointsLbl,0,SpringLayout.HORIZONTAL_CENTER,spielerProgressPanel);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,skillpointsLbl,10,SpringLayout.SOUTH,statSpielerWis);
+
         spielerStatsPanel.setLayout(layout);
         spielerStatsPanel.add(statSpielerName);
         spielerStatsPanel.add(statSpielerHpLbl);
@@ -739,32 +752,42 @@ public class Main {
         spielerProgressPanel.add(dexUpBtn);
         spielerProgressPanel.add(knoUpBtn);
         spielerProgressPanel.add(wisUpBtn);
+        spielerProgressPanel.add(skillpointsLbl);
         strUpBtn.setVisible(false);
         dexUpBtn.setVisible(false);
         knoUpBtn.setVisible(false);
         wisUpBtn.setVisible(false);
+        skillpointsLbl.setVisible(false);
 
         strUpBtn.addActionListener(e -> {
             skillpoints--;
             spielerStr++;
             spielerMaxHp += 2;
             spielerHp += 2;
+            spielerAtk += 2;
+            spielerDef += 2;
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
                 knoUpBtn.setVisible(false);
                 wisUpBtn.setVisible(false);
+                skillpointsLbl.setVisible(false);
             }
             updateSpielerStats();
         });
         dexUpBtn.addActionListener(e -> {
             skillpoints--;
             spielerDex++;
+            spielerAtk += 3;
+            spielerDef++;
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
                 knoUpBtn.setVisible(false);
                 wisUpBtn.setVisible(false);
+                skillpointsLbl.setVisible(false);
             }
             updateSpielerStats();
         });
@@ -773,11 +796,15 @@ public class Main {
             spielerKno++;
             spielerMaxSp += 2;
             spielerSp += 2;
+            spielerAtk += 3;
+            spielerDef++;
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
                 knoUpBtn.setVisible(false);
                 wisUpBtn.setVisible(false);
+                skillpointsLbl.setVisible(false);
             }
             updateSpielerStats();
         });
@@ -788,11 +815,15 @@ public class Main {
             spielerHp++;
             spielerMaxSp++;
             spielerSp++;
+            spielerAtk += 2;
+            spielerDef += 2;
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
             if (skillpoints <= 0){
                 strUpBtn.setVisible(false);
                 dexUpBtn.setVisible(false);
                 knoUpBtn.setVisible(false);
                 wisUpBtn.setVisible(false);
+                skillpointsLbl.setVisible(false);
             }
             updateSpielerStats();
         });
