@@ -14,7 +14,7 @@ public class Main {
             textAreaPanel, spielerStatsPanel, spielerProgressPanel, optionenPanel,
             logPanel, vorschauStatsPanel,
             logBtnPanel, adminPanel, auswahlPanelLinks, vorschauPanel,
-            auswahlPanelRechts, gegnerInfoPanel,
+            auswahlPanelRechts, gegnerInfoPanel, gameOverBtnPanel,
             gegnerBildPanel, naviPanel;
     private static JTextArea logTextArea;
     private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp,
@@ -103,12 +103,13 @@ public class Main {
         titelStartBtn.setForeground(Color.WHITE);
 
         SpringLayout layout = new SpringLayout();
-        layout.putConstraint(SpringLayout.NORTH, titelStartBtn, 20, SpringLayout.NORTH, titelStartBtnPanel);
-        layout.putConstraint(SpringLayout.WEST, titelStartBtn, 35, SpringLayout.WEST, titelStartBtnPanel);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, titelStartBtn, 0, SpringLayout.HORIZONTAL_CENTER, titelStartBtnPanel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, titelStartBtn, 0, SpringLayout.VERTICAL_CENTER, titelStartBtnPanel);
         titelStartBtnPanel.add(titelStartBtn);
         titelStartBtnPanel.setLayout(layout);
 
         con = mainFrame.getContentPane();
+        con.setLayout(null);
         con.add(titelStartBtnPanel);
         con.add(titelPanel);
         mainFrame.pack();
@@ -771,7 +772,7 @@ public class Main {
         spielerProgressLayout.putConstraint(SpringLayout.NORTH,wisUpBtn,10, SpringLayout.SOUTH,statSpielerKno);
 
         spielerProgressLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,skillpointsLbl,0,SpringLayout.HORIZONTAL_CENTER,spielerProgressPanel);
-        spielerProgressLayout.putConstraint(SpringLayout.NORTH,skillpointsLbl,10,SpringLayout.SOUTH,statSpielerWis);
+        spielerProgressLayout.putConstraint(SpringLayout.NORTH,skillpointsLbl,5,SpringLayout.SOUTH,statSpielerWis);
 
         spielerStatsPanel.setLayout(layout);
         spielerStatsPanel.add(statSpielerName);
@@ -1414,6 +1415,7 @@ public class Main {
             textAreaPanel.setVisible(false);
             optionenPanel.setVisible(false);
             gameOverPanel.setVisible(true);
+            gameOverBtnPanel.setVisible(true);
         });
         timer.setRepeats(false);
         timer.start();
@@ -1421,16 +1423,40 @@ public class Main {
     public static void gameOverScreen(){
         delay(1000);
         gameOverPanel = new JPanel();
+        gameOverBtnPanel = new JPanel();
         JLabel gameOverLbl = new JLabel("Game Over");
+        JButton gameOverBtn = new JButton("Neustart");
         gameOverLbl.setFont(titelFont);
         gameOverPanel.setBounds(100, 50, 600, 250);
+        gameOverPanel.setBounds(100, 50, 600, 250);
         gameOverPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        gameOverBtnPanel.setBounds(300, 400, 200, 100);
+        gameOverBtnPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
         gameOverPanel.setVisible(false);
+        gameOverBtnPanel.setVisible(false);
+
+        gameOverBtn.setFont(startBtnFont);
+        gameOverBtn.setForeground(Color.WHITE);
+
+        SpringLayout layout = new SpringLayout();
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, gameOverBtn, 0, SpringLayout.HORIZONTAL_CENTER, gameOverBtnPanel);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, gameOverBtn, 0, SpringLayout.VERTICAL_CENTER, gameOverBtnPanel);
+        gameOverBtnPanel.add(gameOverBtn);
+        gameOverBtnPanel.setLayout(layout);
 
         gameOverPanel.add(gameOverLbl);
+        con.add(gameOverBtnPanel);
         con.add(gameOverPanel);
+        mainFrame.pack();
         con.setVisible(true);
         con.revalidate();
         con.repaint();
+
+        gameOverBtn.addActionListener(e -> {
+            mainFrame.dispose();
+            adminFrame.dispose();
+            logFrame.dispose();
+            new Main();
+        });
     }
 }
