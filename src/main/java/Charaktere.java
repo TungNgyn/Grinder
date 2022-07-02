@@ -14,10 +14,10 @@ public abstract class Charaktere {
     public int spMod;
     public String mod;
     public int lvl;
-    public double exp;
+    public int exp;
 
     public Charaktere(String name, int maxHp, int maxSp, int str, int dex, int kno, int wis,
-                      String mod, int atk, int def, int hpMod, int spMod, double exp, int lvl){
+                      String mod, int atk, int def, int hpMod, int spMod, int exp, int lvl){
         this.name = name;
         this.maxHp = maxHp;
         this.hp = maxHp;

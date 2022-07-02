@@ -39,7 +39,7 @@ public class Main {
     private static Container con, conLog, conAdmin;
     private static JScrollPane logTextAreaScroll;
     private static JProgressBar spielerHpBar, spielerSpBar, spielerExpBar, gegnerHealthBar;
-    static Font titelFont, normalFont, startBtnFont, statFont, textFont, vorschauFont, barFont;
+    static Font titelFont, normalFont, startBtnFont, statFont, textFont, mainTextFont, vorschauFont, barFont;
     static String gegnerName, spielerName, skill1Name, skill1Mod;
     static int gegnerHp, gegnerMaxHp, gegnerSp, gegnermaxSp, gegnerAtk, gegnerDef, gegnerLvl,
             spielerHp, spielerMaxHp, spielerSp, spielerMaxSp, spielerAtk, spielerDef, spielerLvl,
@@ -47,7 +47,7 @@ public class Main {
             gegnerStr, gegnerDex, gegnerKno, gegnerWis, skill1Genauigkeit, skill1Kraft;
     static int skillpoints = 0;
     static int raumCounter = 0;
-    static double gegnerExp, spielerExp;
+    static int gegnerExp, spielerExp;
     static boolean encounterAktiv = false;
     static SpringLayout layout = new SpringLayout();
     static Random rnd = new Random();
@@ -83,13 +83,14 @@ public class Main {
         titelFont = new Font("Times New Roman", Font.BOLD, 90);
         startBtnFont = new Font("Segoe UI", Font.BOLD, 30);
         normalFont = new Font("Segoe UI", Font.BOLD, 22);
-        textFont = new Font("Segoe UI", Font.BOLD, 15);
-        barFont = new Font("Segoe UI", Font.BOLD, 18);
+        textFont = new Font("Segoe UI", Font.BOLD, 12);
+        mainTextFont = new Font("Segoe UI", Font.BOLD, 15);
+        barFont = new Font("Segoe UI", Font.BOLD, 15);
 
         titelPanel = new JPanel();
         titelPanel.setBounds(100, 50, 600, 250);
         titelPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
-        titelLbl = new JLabel("gfdfhrtd");
+        titelLbl = new JLabel("GGGGGGG");
         titelLbl.setForeground(Color.WHITE);
         titelLbl.setFont(titelFont);
         titelPanel.add(titelLbl);
@@ -127,7 +128,7 @@ public class Main {
         logTextArea = new JTextArea();
         logTextArea.setLineWrap(true);
         logTextArea.setEditable(false);
-        logTextArea.setFont(textFont);
+        logTextArea.setFont(mainTextFont);
 
         logTextAreaScroll = new JScrollPane(logTextArea);
         logTextAreaScroll.setPreferredSize(new Dimension(450, 285));
@@ -178,6 +179,8 @@ public class Main {
         gegnerListeT1[14] = Gegner.zombie;
     }
     public static void randomEncounterTier1() {
+        naviLinksBtn.setEnabled(false);
+        naviRechtsBtn.setEnabled(false);
         Random rnd = new Random();
         int i = rnd.nextInt(0, 15);
         gegnerName = gegnerListeT1[i].name;
@@ -244,7 +247,7 @@ public class Main {
             logTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
         });
         adminBtn3.addActionListener(e -> {
-            spielerExp = spielerExp + 3.4;
+            spielerExp = spielerExp + 3;
             updateSpielerStats();
         });
         adminBtn4.addActionListener(e -> {
@@ -359,7 +362,7 @@ public class Main {
         checkExp();
 
         statSpielerName.setText(spielerName);
-        statSpielerExp.setText(String.format(Locale.US, "%.2f", spielerExp));
+        statSpielerExp.setText("" + spielerExp);
         statSpielerLvl.setText("" + spielerLvl);
         statSpielerHp.setText(spielerHp + "/" + spielerMaxHp);
         statspielerSp.setText(spielerSp + "/" + spielerMaxSp);
@@ -371,7 +374,7 @@ public class Main {
         statSpielerWis.setText("" + spielerWis);
         spielerHpBar.setValue(spielerHp);;
         spielerSpBar.setValue(spielerSp);
-        spielerExpBar.setValue((int) spielerExp);
+        spielerExpBar.setValue(spielerExp);
         spielerExpBar.setMaximum((int) expNeed());
     }
     public static void skillpoints() {
@@ -397,14 +400,14 @@ public class Main {
             spielerExpBar.setMinimum((int)Math.round(10*(Math.pow(spielerLvl,1.5))));
             spielerLvl++;
             skillpoints();
-            skillpointsLbl.setText("("+skillpoints+") Skillpunkte zu vergeben.");
+            skillpointsLbl.setText("("+skillpoints+") Skillpunkte verfügbar");
 
             statSpielerLvl.setText("" + spielerLvl);
             spielerMaxHp += (spielerHpMod);
             spielerHp = spielerMaxHp;
             spielerMaxSp += (spielerSpMod);
             spielerSp = spielerMaxSp;
-            statSpielerExp.setText("" + (String.format(Locale.US, "%.2f", spielerExp) + "%"));
+            statSpielerExp.setText("" + spielerExp);
             spielerAtk += spielerLvl;
             spielerDef += spielerLvl;
             spielerHpBar.setMaximum(spielerMaxHp);
@@ -459,6 +462,8 @@ public class Main {
         }
         if (gegnerHp <= 0) {
             gegnerBesiegt();
+            naviLinksBtn.setEnabled(true);
+            naviRechtsBtn.setEnabled(true);
         }
     }
     public static void gegnerAngriff(){
@@ -477,8 +482,8 @@ public class Main {
     }
     public static void gegnerBesiegt(){
             gegnerHp = 0;
-            logTextArea.append("\nGewonnen!\n" + (String.format(Locale.US, "%.2f", gegnerExp)) + " Erfahrungspunkte erhalten.");
-            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!<br>" + (String.format(Locale.US, "%.2f", gegnerExp)) + " Erfahrungspunkte erhalten.");
+            logTextArea.append("\nGewonnen!\n" + gegnerExp + " Erfahrungspunkte erhalten.");
+            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!<br>" + gegnerExp + " Erfahrungspunkte erhalten.");
             spielerExp += gegnerExp;
             gegnerBildLbl.setVisible(false);
             gegnerInfoPanel.setVisible(false);
@@ -496,7 +501,7 @@ public class Main {
         textAreaPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
         mainTextLbl = new JLabel("<html>TEST<br>hallotestt2<br>qweqe");
-        mainTextLbl.setFont(textFont);
+        mainTextLbl.setFont(mainTextFont);
 
         skillBtnPanel = new JPanel();
         SpringLayout skillBtnLayout = new SpringLayout();
@@ -592,7 +597,7 @@ public class Main {
         statspielerSpLbl = new JLabel("SP");
         statspielerSp = new JLabel(spielerSp+"/"+spielerMaxSp);
         statSpielerExpLbl = new JLabel("EXP");
-        statSpielerExp = new JLabel(String.format(Locale.US,"%.2f",spielerExp)+"%");
+        statSpielerExp = new JLabel("" + spielerExp);
 
         statSpielerAtkLbl = new JLabel("Angriff");
         statSpielerAtk = new JLabel(""+spielerAtk);
@@ -604,6 +609,7 @@ public class Main {
         knoUpBtn = new JButton(statUp);
         wisUpBtn = new JButton(statUp);
         skillpointsLbl = new JLabel("(2) Skillpunkte zu vergeben.");
+        skillpointsLbl.setFont(new Font("Segoe UI", Font.BOLD, 11));
 
 
         JLabel statSpielerStrLbl = new JLabel("<html><font color='#ff0000'>Stärke");
@@ -670,6 +676,7 @@ public class Main {
         spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerKnoLbl, 20, SpringLayout.WEST,spielerProgressPanel);
         spielerProgressLayout.putConstraint(SpringLayout.WEST,statSpielerWisLbl, 20, SpringLayout.WEST,spielerProgressPanel);
 
+        layout.putConstraint(SpringLayout.NORTH,statSpielerName,5, SpringLayout.NORTH,spielerStatsPanel);
         layout.putConstraint(SpringLayout.NORTH,statSpielerLvlLbl,5, SpringLayout.SOUTH,statSpielerName);
         layout.putConstraint(SpringLayout.NORTH,statSpielerHpLbl,10, SpringLayout.SOUTH,statSpielerLvlLbl);
         layout.putConstraint(SpringLayout.NORTH,spielerHpBar,3, SpringLayout.SOUTH,statSpielerHpLbl);
@@ -915,11 +922,11 @@ public class Main {
         pfeilHochLinks = new JLabel(pfeilHoch);
         pfeilHochRechts = new JLabel(pfeilHoch);
         naviLbl = new JLabel("Richtung auswählen");
+        naviLbl.setFont(textFont);
         naviTitelLbl = new JLabel("Titel");
         naviEbeneLbl = new JLabel("Ebene 1");
-        naviLbl.setFont(vorschauFont);
         naviTitelLbl.setFont(statFont);
-        naviEbeneLbl.setFont(vorschauFont);
+        naviEbeneLbl.setFont(textFont);
 
         //btn
         naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER,naviLinksBtn,-50,SpringLayout.HORIZONTAL_CENTER,naviPanel);
@@ -932,6 +939,7 @@ public class Main {
         naviLayout.putConstraint(SpringLayout.NORTH, pfeilHochLinks, 0, SpringLayout.SOUTH,naviLinksBtn);
         naviLayout.putConstraint(SpringLayout.NORTH, pfeilHochRechts, 0, SpringLayout.SOUTH,naviRechtsBtn);
 
+        naviLayout.putConstraint(SpringLayout.NORTH, naviTitelLbl,5,SpringLayout.NORTH,naviPanel);
         naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviTitelLbl,0,SpringLayout.HORIZONTAL_CENTER,naviPanel);
         naviLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, naviEbeneLbl, 0, SpringLayout.HORIZONTAL_CENTER, naviPanel);
         naviLayout.putConstraint(SpringLayout.NORTH, naviEbeneLbl, 0, SpringLayout.SOUTH, naviTitelLbl);
@@ -975,8 +983,8 @@ public class Main {
                 int w = rnd.nextInt(0,7);
 
                 if (naviLinksBtn.getIcon().toString().equals("res/Icons/Kampf.png")) {
-                    System.out.println(gegnerName);
                     randomEncounterTier1();
+                    System.out.println(gegnerName);
                 } else if (naviLinksBtn.getIcon().toString().equals("res/Icons/Lager.png")) {
                     System.out.println("Lager");
                 } else if (naviLinksBtn.getIcon().toString().equals("res/Icons/Event.png")) {
@@ -1000,16 +1008,16 @@ public class Main {
             int w = rnd.nextInt(0,7);
 
             if (naviRechtsBtn.getIcon().toString().equals("res/Icons/Kampf.png")) {
-                System.out.println("Kampf");
                 randomEncounterTier1();
+                System.out.println(gegnerName);
             } else if (naviRechtsBtn.getIcon().toString().equals("res/Icons/Lager.png")) {
                 System.out.println("Lager");
             } else if (naviRechtsBtn.getIcon().toString().equals("res/Icons/Event.png")) {
                 System.out.println("Event");
             }
 
-            naviLinksBtn.setIcon(naviLinksLinksLbl.getIcon());
-            naviRechtsBtn.setIcon(naviLinksRechtsLbl.getIcon());
+            naviLinksBtn.setIcon(naviRechtsLinksLbl.getIcon());
+            naviRechtsBtn.setIcon(naviRechtsRechtsLbl.getIcon());
             naviLinksLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[z].name+".png"));
             naviLinksRechtsLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[y].name+".png"));
             naviRechtsLinksLbl.setIcon(new ImageIcon("res/Icons/"+kartenListe[x].name+".png"));

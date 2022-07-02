@@ -1,9 +1,7 @@
-import java.util.Random;
-
 public class Spieler extends Charaktere{
     public Spieler(String name, int maxHp, int maxSp, int str, int dex, int kno, int wis,
                    String mod, int atk, int def, int hpMod, int spMod,
-                   double exp, int lvl){
+                   int exp, int lvl){
         super(name, maxHp, maxSp, str, dex, kno, wis, mod, atk, def, hpMod, spMod, exp, lvl);
     }
 
