@@ -1,3 +1,5 @@
+import Charaktere.*;
+import Skills.*;
 import com.formdev.flatlaf.FlatDarculaLaf;
 
 import javax.swing.*;
@@ -39,20 +41,23 @@ public class Main {
     private static JScrollPane logTextAreaScroll;
     private static JProgressBar spielerHpBar, spielerSpBar, spielerExpBar, gegnerHealthBar;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont, mainTextFont, vorschauFont, barFont;
-    static String gegnerName, spielerName, skill1Name, skill1Mod, gegnerMod;
+    static String gegnerName, spielerName, skill1Name, skill1Mod, gegnerMod, skill2Name, skill3Name,skill4Name,
+                    skill5Name, skill2Mod, skill3Mod, skill4Mod, skill5Mod;
     static int gegnerHp, gegnerMaxHp, gegnerSp, gegnermaxSp, gegnerAtk, gegnerDef, gegnerLvl,
             spielerHp, spielerMaxHp, spielerSp, spielerMaxSp, spielerAtk, spielerDef, spielerLvl,
             spielerStr, spielerDex, spielerKno, spielerWis, spielerHpMod, spielerSpMod,
-            gegnerStr, gegnerDex, gegnerKno, gegnerWis, skill1Genauigkeit, skill1Kraft;
+            gegnerStr, gegnerDex, gegnerKno, gegnerWis, skill1Genauigkeit, skill1Kraft, skill2Kraft,
+            skill3Kraft,skill4Kraft,skill5Kraft, skill2Genauigkeit, skill3Genauigkeit, skill4Genauigkeit, skill5Genauigkeit;
     static int skillpoints = 0;
     static int raumCounter = 0;
     static int gegnerExp, spielerExp;
     static JPanel gameOverPanel = new JPanel();
     static SpringLayout layout = new SpringLayout();
     static Random rnd = new Random();
+    static int trefferChance;
     static int angriff, schaden, range1, range2;
     static String angriffMod, schadenMod;
-    static ImageIcon skill1Bild;
+    static ImageIcon skill1Bild, skill2Bild, skill3Bild, skill4Bild, skill5Bild;
 
     static Skills[] skillListe = new Skills[4];
     static Gegner[] gegnerListeT1 = new Gegner[15];
@@ -334,11 +339,6 @@ public class Main {
             gegnerBildLbl.setVisible(true);
             gegnerBildLbl.setIcon(gegnerBild);
         });
-        adminBtn11.addActionListener(e -> {
-            skillBtn1.setIcon(Skills.hexerSkill7.bild);
-            System.out.println(true);
-            skillBtn1.setToolTipText("<html><font color='#ff0000'>Skill 2</font><br>lklk<br>izztf");
-        });
         adminBtn12.addActionListener(e -> {
             randomEncounterTier1();
         });
@@ -465,44 +465,44 @@ public class Main {
     public static void gegnerAngriff(){
         switch (gegnerMod) {
             case "str":
-                range1 = (gegnerAtk+(gegnerStr/2))-
-                        (spielerDef+(spielerStr/2));
-                range2 = ((gegnerAtk+(gegnerStr/2))-
-                        (spielerDef+(spielerStr/2)))*2;
-                if (range1 <= 0 ){
+                range1 = ((gegnerAtk+(gegnerStr/100*gegnerStr)*gegnerStr/10))-(spielerDef+(spielerStr/2));
+                range2 = (int) Math.ceil((((gegnerAtk+(gegnerStr/100*gegnerStr)*gegnerStr/10))-(spielerDef+(spielerStr/2)))*1.3);
+                System.out.println(range1);
+                System.out.println(range2);
+                if ((range1 < 0 )|(range2 == 0)){
                     range1 = 0;
                     range2 = 1;
                 }
                 schaden = rnd.nextInt(range1, range2);
                 break;
             case "dex":
-                range1 = (gegnerAtk+(gegnerDex/2))-
-                        (spielerDef+(spielerDex/2));
-                range2 = ((gegnerAtk+(gegnerDex/2))-
-                        (spielerDef+(spielerDex/2)))*2;
-                if (range1 <= 0 ){
+                range1 = ((gegnerAtk+(gegnerDex/100*gegnerDex)*gegnerDex/10))-(spielerDef+(spielerDex/2));
+                range2 = (int) Math.ceil((((gegnerAtk+(gegnerDex/100*gegnerDex)*gegnerDex/10))-(spielerDef+(spielerDex/2)))*1.3);
+                System.out.println(range1);
+                System.out.println(range2);
+                if ((range1 < 0 )|(range2 == 0)){
                     range1 = 0;
                     range2 = 1;
                 }
                 schaden = rnd.nextInt(range1, range2);
                 break;
             case "kno":
-                range1 = (gegnerAtk+(gegnerKno/2))-
-                        (spielerDef+(spielerKno/2));
-                range2 = ((gegnerAtk+(gegnerKno/2))-
-                        (spielerDef+(spielerKno/2)))*2;
-                if (range1 <= 0 ){
+                range1 = ((gegnerAtk+(gegnerKno/100*gegnerKno)*gegnerKno/10))-(spielerDef+(spielerKno/2));
+                range2 = (int) Math.ceil((((gegnerAtk+(gegnerKno/100*gegnerKno)*gegnerKno/10))-(spielerDef+(spielerKno/2)))*1.3);
+                System.out.println(range1);
+                System.out.println(range2);
+                if ((range1 < 0 )|(range2 == 0)){
                     range1 = 0;
                     range2 = 1;
                 }
                 schaden = rnd.nextInt(range1, range2);
                 break;
             case "wis":
-                range1 = (gegnerAtk+(gegnerWis/2))-
-                        (spielerDef+(spielerWis/2));
-                range2 = ((gegnerAtk+(gegnerWis/2))-
-                        (spielerDef+(spielerWis/2)))*2;
-                if (range1 <= 0 ){
+                range1 = ((gegnerAtk+(gegnerWis/100*gegnerWis)*gegnerWis/10))-(spielerDef+(spielerWis/2));
+                range2 = (int) Math.ceil((((gegnerAtk+(gegnerWis/100*gegnerWis)*gegnerWis/10))-(spielerDef+(spielerWis/2)))*1.3);
+                System.out.println(range1);
+                System.out.println(range2);
+                if ((range1 < 0 )|(range2 == 0)){
                     range1 = 0;
                     range2 = 1;
                 }
@@ -579,9 +579,9 @@ public class Main {
         optionenPanel.add(logBtn);
         //endregion
         //region Skillbuttons
-//        skillBtn6 = new JButton(Skills.hexerSkill6);
-//        skillBtn7 = new JButton(Skills.hexerSkill7);
-//        skillBtn8 = new JButton(Skills.hexerSkill8);
+//        skillBtn6 = new JButton(Skills.Skills.hexerSkill6);
+//        skillBtn7 = new JButton(Skills.Skills.hexerSkill7);
+//        skillBtn8 = new JButton(Skills.Skills.hexerSkill8);
 //        skillBtn6.setPreferredSize(new Dimension(50,50));
 //        skillBtn7.setPreferredSize(new Dimension(50,50));
 //        skillBtn8.setPreferredSize(new Dimension(50,50));
@@ -1088,54 +1088,385 @@ public class Main {
         con.revalidate();
         con.repaint();
     }
+    public static void spielerVerfehlt(){
+        if(gegnerHp > 0){
+            logTextArea.append("\n" + spielerName + " verfehlt...");
+            mainTextLbl.setText("<html>" + spielerName + " verfehlt...");
+            wait(700);
+        }
+    }
     public static void skillLeiste(){
-        skill1Name = Skills.hexerSkill1.name;
-        skill1Kraft = Skills.hexerSkill1.kraft;
-        skill1Genauigkeit = Skills.hexerSkill1.genauigkeit;
-        skill1Mod = Skills.hexerSkill1.mod;
-        skill1Bild = Skills.hexerSkill1.bild;
+        //region Skill1
+        skill1Name = StrSkills.angriffSkill.name;
+        skill1Kraft = StrSkills.angriffSkill.kraft;
+        skill1Genauigkeit = StrSkills.angriffSkill.genauigkeit;
+        skill1Mod = StrSkills.angriffSkill.mod;
+        skill1Bild = StrSkills.angriffSkill.bild;
 
         skillBtn1.setIcon(skill1Bild);
-        skillBtn1.setToolTipText("<html><p><font color='red' size='5' face='Segoe UI'>"
-                +skill1Name+"</p></font>" +"<p><font size='4' face='Segoe UI'>Kraft: "
-                +skill1Kraft+"<br>Genauigkeit: "
-                +skill1Genauigkeit+"</p></font>");
+        skillBtn1.setToolTipText(StrSkills.angriffSkill.toolText);
         skillBtn1.addActionListener(e -> {
             switch (skill1Mod){
                 case "str":
-                    range1 = (spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerStr/2));
-                    range2 = ((spielerAtk+(spielerStr/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerStr/2)))*2;
-                    angriff = rnd.nextInt(range1, range2);
-                    spielerAngriff();
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill1Genauigkeit >= trefferChance){
+                        range1 = (((spielerAtk+(skill1Kraft/100*spielerStr))*spielerStr/10)-(gegnerDef+(gegnerStr/2)))/2;
+                        range2 = ((int) Math.ceil(((((spielerAtk+(skill1Kraft/100*spielerStr))*spielerStr/10)-(gegnerDef+(gegnerStr/2)))/2)*1.3));
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
                     break;
                 case "dex":
-                    range1 = (spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerDex/2));
-                    range2 = ((spielerAtk+(spielerDex/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerDex/2)))*2;
-                    angriff = rnd.nextInt(range1, range2);
-                    spielerAngriff();
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill1Genauigkeit >= trefferChance){
+                        range1 = (spielerDex+(skill1Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
+                        range2 = (int) Math.ceil(((spielerDex+(skill1Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
                     break;
                 case "kno":
-                    range1 = (spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerKno/2));
-                    range2 = ((spielerAtk+(spielerKno/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerKno/2)))*2;
-                    angriff = rnd.nextInt(range1, range2);
-                    spielerAngriff();
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill1Genauigkeit >= trefferChance){
+                        range1 = (spielerKno+(skill1Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
+                        range2 = (int) Math.ceil(((spielerKno+(skill1Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+                        System.out.println(range1);
+                        System.out.println(range2);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
                     break;
                 case "wis":
-                    range1 = (spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerWis/2));
-                    range2 = ((spielerAtk+(spielerWis/2)*(skill1Kraft/100))-
-                            (gegnerDef+(gegnerWis/2)))*2;
-                    angriff = rnd.nextInt(range1, range2);
-                    spielerAngriff();
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill1Genauigkeit >= trefferChance){
+                        range1 = (spielerWis+(skill1Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
+                        range2 = (int) Math.ceil(((spielerWis+(skill1Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+                        System.out.println(range1);
+                        System.out.println(range2);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
                     break;
             }
         });
+        //endregion
+        //region Skill2
+        skill2Name = DexSkills.gezielterSchussSkill.name;
+        skill2Kraft = DexSkills.gezielterSchussSkill.kraft;
+        skill2Genauigkeit = DexSkills.gezielterSchussSkill.genauigkeit;
+        skill2Mod = DexSkills.gezielterSchussSkill.mod;
+        skill2Bild = DexSkills.gezielterSchussSkill.bild;
+
+        skillBtn2.setIcon(skill2Bild);
+        skillBtn2.setToolTipText(DexSkills.gezielterSchussSkill.toolText);
+        skillBtn2.addActionListener(e -> {
+            switch (skill2Mod){
+                case "str":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill2Genauigkeit >= trefferChance){
+                        range1 = (spielerAtk+(skill2Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
+                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "dex":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill2Genauigkeit >= trefferChance){
+                        range1 = (((spielerAtk+(skill2Kraft/100*spielerDex))*spielerDex/10)-(gegnerDef+(gegnerDex/2)))/2;
+                        range2 = ((int) Math.ceil(((((spielerAtk+(skill2Kraft/100*spielerDex))*spielerDex/10)-(gegnerDef+(gegnerDex/2)))/2)*1.3));
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "kno":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill2Genauigkeit >= trefferChance){
+                        range1 = (spielerAtk+(skill2Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
+                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "wis":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill2Genauigkeit >= trefferChance){
+                        range1 = (spielerAtk+(skill2Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
+                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+            }
+        });
+        //endregion
+        //region Skill3
+        skill3Name = KnoSkills.magischesGeschossSkill.name;
+        skill3Kraft = KnoSkills.magischesGeschossSkill.kraft;
+        skill3Genauigkeit = KnoSkills.magischesGeschossSkill.genauigkeit;
+        skill3Mod = KnoSkills.magischesGeschossSkill.mod;
+        skill3Bild = KnoSkills.magischesGeschossSkill.bild;
+
+        skillBtn3.setIcon(skill3Bild);
+        skillBtn3.setToolTipText(KnoSkills.magischesGeschossSkill.toolText);
+        skillBtn3.addActionListener(e -> {
+            switch (skill3Mod){
+                case "str":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill3Genauigkeit >= trefferChance){
+                        range1 = (spielerStr+(skill3Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
+                        range2 = (int) Math.ceil(((spielerStr+(skill3Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "dex":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill3Genauigkeit >= trefferChance){
+                        range1 = (spielerDex+(skill3Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
+                        range2 = (int) Math.ceil(((spielerDex+(skill3Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "kno":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill3Genauigkeit >= trefferChance){
+                        range1 = (((spielerAtk+(skill3Kraft/100*spielerKno))*spielerKno/10)-(gegnerDef+(gegnerKno/2)))/2;
+                        range2 = ((int) Math.ceil(((((spielerAtk+(skill3Kraft/100*spielerKno))*spielerKno/10)-(gegnerDef+(gegnerKno/2)))/2)*1.3));
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "wis":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill3Genauigkeit >= trefferChance){
+                        range1 = (spielerWis+(skill3Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
+                        range2 = (int) Math.ceil(((spielerWis+(skill3Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+            }
+        });
+        //endregion
+        //region Skill4
+        skill4Name = WisSkills.heiligerBlitzSkill.name;
+        skill4Kraft = WisSkills.heiligerBlitzSkill.kraft;
+        skill4Genauigkeit = WisSkills.heiligerBlitzSkill.genauigkeit;
+        skill4Mod = WisSkills.heiligerBlitzSkill.mod;
+        skill4Bild = WisSkills.heiligerBlitzSkill.bild;
+
+        skillBtn4.setIcon(skill4Bild);
+        skillBtn4.setToolTipText(WisSkills.heiligerBlitzSkill.toolText);
+        skillBtn4.addActionListener(e -> {
+            switch (skill4Mod){
+                case "str":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill4Genauigkeit >= trefferChance){
+                        range1 = (spielerAtk+(skill4Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
+                        range2 = (int) Math.ceil(((spielerAtk+(skill4Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "dex":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill4Genauigkeit >= trefferChance){
+                        range1 = (spielerDex+(skill4Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
+                        range2 = (int) Math.ceil(((spielerDex+(skill4Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "kno":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill4Genauigkeit >= trefferChance){
+                        range1 = (spielerKno+(skill4Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
+                        range2 = (int) Math.ceil(((spielerKno+(skill4Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "wis":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill4Genauigkeit >= trefferChance){
+                        range1 = (((spielerAtk+(skill4Kraft/100*spielerWis))*spielerWis/10)-(gegnerDef+(gegnerWis/2)))/2;
+                        range2 = ((int) Math.ceil(((((spielerAtk+(skill4Kraft/100*spielerWis))*spielerWis/10)-(gegnerDef+(gegnerWis/2)))/2)*1.3));
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+            }
+        });
+        //endregion
 
     }
     public static void charakterAuswahl(){
@@ -1220,8 +1551,6 @@ public class Main {
             spielerWis = Spieler.krieger.wis;
             spielerHpMod = Spieler.krieger.hpMod;
             spielerSpMod = Spieler.krieger.spMod;
-
-            skillBtn1.setIcon(Skills.hexerSkill1.bild);
 
             ImageIcon vorschauBild = new ImageIcon("res/Spieler/Krieger.png");
             vorschauStatsName.setText(spielerName);

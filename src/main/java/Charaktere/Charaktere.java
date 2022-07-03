@@ -1,3 +1,5 @@
+package Charaktere;
+
 public abstract class Charaktere {
     public String name;
     public int maxHp;
