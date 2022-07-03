@@ -6,15 +6,19 @@ public class Skills {
     public String name;
     public int kraft;
     public int genauigkeit;
+    public int spKosten;
+    public int schlagAnzahl;
     public String mod;
     public ImageIcon bild;
     public String toolText;
 
-    public Skills(String name, int kraft, int genauigkeit, String mod, ImageIcon bild, String toolText){
+    public Skills(String name, int kraft, int genauigkeit, String mod, int spKosten, int schlagAnzahl, ImageIcon bild, String toolText){
         this.name = name;
         this.kraft = kraft;
         this.genauigkeit = genauigkeit;
         this.mod = mod;
+        this.spKosten = spKosten;
+        this.schlagAnzahl = schlagAnzahl;
         this.bild = bild;
         this.toolText = toolText;
     }

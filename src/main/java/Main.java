@@ -284,6 +284,7 @@ public class Main {
         });
         adminBtn7.addActionListener(e -> {
             spielerAngriff();
+            if (gegnerHp > 0)wait(700);
         });
         adminBtn8.addActionListener(e -> {
             Gegner.fledermaus.lvl = 1;
@@ -453,14 +454,12 @@ public class Main {
             gameOverScreen();
     }
     public static void checkLeben(){
-        if (spielerHp <= 0) {
-            spielerBesiegt();
-        }
-        if (gegnerHp <= 0) {
-            gegnerBesiegt();
-            naviLinksBtn.setEnabled(true);
-            naviRechtsBtn.setEnabled(true);
-        }
+            if (spielerHp <= 0) {
+                spielerBesiegt();
+            }
+            if (gegnerHp <= 0) {
+                gegnerBesiegt();
+            }
     }
     public static void gegnerAngriff(){
         switch (gegnerMod) {
@@ -525,14 +524,26 @@ public class Main {
         updateSpielerStats();
     }
     public static void gegnerBesiegt(){
+        Timer timer = new Timer(0, e -> {
             gegnerHp = 0;
-            logTextArea.append("\nGewonnen!\n" + gegnerExp + " Erfahrungspunkte erhalten.");
-            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!<br>" + gegnerExp + " Erfahrungspunkte erhalten.");
-            spielerExp += gegnerExp;
-            gegnerBildLbl.setVisible(false);
-            gegnerInfoPanel.setVisible(false);
-            updateSpielerStats();
-            updateGegnerHp();
+            logTextArea.append("\nGewonnen!");
+            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!");
+            Timer timer2 = new Timer(700, e1 -> {
+                logTextArea.append("\n" + gegnerExp + " Erfahrungspunkte erhalten.");
+                mainTextLbl.setText(mainTextLbl.getText() + "<br>" + gegnerExp + " Erfahrungspunkte erhalten.");
+                spielerExp += gegnerExp;
+                gegnerBildLbl.setVisible(false);
+                gegnerInfoPanel.setVisible(false);
+                updateSpielerStats();
+                updateGegnerHp();
+                naviLinksBtn.setEnabled(true);
+                naviRechtsBtn.setEnabled(true);
+            });
+            timer2.setRepeats(false);
+            timer2.start();
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
     public static void spielFenster(){
         //region Layout
@@ -1092,19 +1103,10 @@ public class Main {
         if(gegnerHp > 0){
             logTextArea.append("\n" + spielerName + " verfehlt...");
             mainTextLbl.setText("<html>" + spielerName + " verfehlt...");
-            wait(700);
+            if (gegnerHp > 0)wait(700);
         }
     }
     public static void skillLeiste(){
-        //region Skill1
-        skill1Name = StrSkills.angriffSkill.name;
-        skill1Kraft = StrSkills.angriffSkill.kraft;
-        skill1Genauigkeit = StrSkills.angriffSkill.genauigkeit;
-        skill1Mod = StrSkills.angriffSkill.mod;
-        skill1Bild = StrSkills.angriffSkill.bild;
-
-        skillBtn1.setIcon(skill1Bild);
-        skillBtn1.setToolTipText(StrSkills.angriffSkill.toolText);
         skillBtn1.addActionListener(e -> {
             switch (skill1Mod){
                 case "str":
@@ -1190,16 +1192,6 @@ public class Main {
                     break;
             }
         });
-        //endregion
-        //region Skill2
-        skill2Name = DexSkills.gezielterSchussSkill.name;
-        skill2Kraft = DexSkills.gezielterSchussSkill.kraft;
-        skill2Genauigkeit = DexSkills.gezielterSchussSkill.genauigkeit;
-        skill2Mod = DexSkills.gezielterSchussSkill.mod;
-        skill2Bild = DexSkills.gezielterSchussSkill.bild;
-
-        skillBtn2.setIcon(skill2Bild);
-        skillBtn2.setToolTipText(DexSkills.gezielterSchussSkill.toolText);
         skillBtn2.addActionListener(e -> {
             switch (skill2Mod){
                 case "str":
@@ -1284,16 +1276,6 @@ public class Main {
                     break;
             }
         });
-        //endregion
-        //region Skill3
-        skill3Name = KnoSkills.magischesGeschossSkill.name;
-        skill3Kraft = KnoSkills.magischesGeschossSkill.kraft;
-        skill3Genauigkeit = KnoSkills.magischesGeschossSkill.genauigkeit;
-        skill3Mod = KnoSkills.magischesGeschossSkill.mod;
-        skill3Bild = KnoSkills.magischesGeschossSkill.bild;
-
-        skillBtn3.setIcon(skill3Bild);
-        skillBtn3.setToolTipText(KnoSkills.magischesGeschossSkill.toolText);
         skillBtn3.addActionListener(e -> {
             switch (skill3Mod){
                 case "str":
@@ -1375,16 +1357,6 @@ public class Main {
                     break;
             }
         });
-        //endregion
-        //region Skill4
-        skill4Name = WisSkills.heiligerBlitzSkill.name;
-        skill4Kraft = WisSkills.heiligerBlitzSkill.kraft;
-        skill4Genauigkeit = WisSkills.heiligerBlitzSkill.genauigkeit;
-        skill4Mod = WisSkills.heiligerBlitzSkill.mod;
-        skill4Bild = WisSkills.heiligerBlitzSkill.bild;
-
-        skillBtn4.setIcon(skill4Bild);
-        skillBtn4.setToolTipText(WisSkills.heiligerBlitzSkill.toolText);
         skillBtn4.addActionListener(e -> {
             switch (skill4Mod){
                 case "str":
@@ -1547,8 +1519,6 @@ public class Main {
                     break;
             }
         });
-        //endregion
-
     }
     public static void charakterAuswahl(){
         //region layout
