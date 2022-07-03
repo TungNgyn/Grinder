@@ -1110,8 +1110,8 @@ public class Main {
                 case "str":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill1Genauigkeit >= trefferChance){
-                        range1 = (((spielerAtk+(skill1Kraft/100*spielerStr))*spielerStr/10)-(gegnerDef+(gegnerStr/2)))/2;
-                        range2 = ((int) Math.ceil(((((spielerAtk+(skill1Kraft/100*spielerStr))*spielerStr/10)-(gegnerDef+(gegnerStr/2)))/2)*1.3));
+                        range1 = (((skill1Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                        range2 = ((int) Math.ceil((((skill1Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1130,8 +1130,8 @@ public class Main {
                 case "dex":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill1Genauigkeit >= trefferChance){
-                        range1 = (spielerDex+(skill1Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
-                        range2 = (int) Math.ceil(((spielerDex+(skill1Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+                        range1 = (((skill1Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex));
+                        range2 = ((int) Math.ceil((((skill1Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1149,8 +1149,8 @@ public class Main {
                 case "kno":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill1Genauigkeit >= trefferChance){
-                        range1 = (spielerKno+(skill1Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
-                        range2 = (int) Math.ceil(((spielerKno+(skill1Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+                        range1 = (((skill1Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno));
+                        range2 = ((int) Math.ceil((((skill1Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
 
@@ -1170,8 +1170,8 @@ public class Main {
                 case "wis":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill1Genauigkeit >= trefferChance){
-                        range1 = (spielerWis+(skill1Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
-                        range2 = (int) Math.ceil(((spielerWis+(skill1Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+                        range1 = (((skill1Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis));
+                        range2 = ((int) Math.ceil((((skill1Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
 
@@ -1205,8 +1205,8 @@ public class Main {
                 case "str":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill2Genauigkeit >= trefferChance){
-                        range1 = (spielerAtk+(skill2Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
-                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+                        range1 = (((skill2Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                        range2 = ((int) Math.ceil((((skill2Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1225,8 +1225,8 @@ public class Main {
                 case "dex":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill2Genauigkeit >= trefferChance){
-                        range1 = (((spielerAtk+(skill2Kraft/100*spielerDex))*spielerDex/10)-(gegnerDef+(gegnerDex/2)))/2;
-                        range2 = ((int) Math.ceil(((((spielerAtk+(skill2Kraft/100*spielerDex))*spielerDex/10)-(gegnerDef+(gegnerDex/2)))/2)*1.3));
+                        range1 = (((skill2Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex));
+                        range2 = ((int) Math.ceil(((((skill2Kraft*spielerDex)/100)+(spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1245,8 +1245,8 @@ public class Main {
                 case "kno":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill2Genauigkeit >= trefferChance){
-                        range1 = (spielerAtk+(skill2Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
-                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+                        range1 = (((skill2Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno));
+                        range2 = ((int) Math.ceil((((skill2Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1265,8 +1265,8 @@ public class Main {
                 case "wis":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill2Genauigkeit >= trefferChance){
-                        range1 = (spielerAtk+(skill2Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
-                        range2 = (int) Math.ceil(((spielerAtk+(skill2Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+                        range1 = (((skill2Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis));
+                        range2 = ((int) Math.ceil((((skill2Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1299,8 +1299,8 @@ public class Main {
                 case "str":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill3Genauigkeit >= trefferChance){
-                        range1 = (spielerStr+(skill3Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
-                        range2 = (int) Math.ceil(((spielerStr+(skill3Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+                        range1 = (((skill3Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                        range2 = ((int) Math.ceil((((skill3Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1318,8 +1318,8 @@ public class Main {
                 case "dex":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill3Genauigkeit >= trefferChance){
-                        range1 = (spielerDex+(skill3Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
-                        range2 = (int) Math.ceil(((spielerDex+(skill3Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+                        range1 = (((skill3Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex));
+                        range2 = ((int) Math.ceil((((skill3Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1337,8 +1337,8 @@ public class Main {
                 case "kno":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill3Genauigkeit >= trefferChance){
-                        range1 = (((spielerAtk+(skill3Kraft/100*spielerKno))*spielerKno/10)-(gegnerDef+(gegnerKno/2)))/2;
-                        range2 = ((int) Math.ceil(((((spielerAtk+(skill3Kraft/100*spielerKno))*spielerKno/10)-(gegnerDef+(gegnerKno/2)))/2)*1.3));
+                        range1 = (((skill3Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno));
+                        range2 = ((int) Math.ceil((((skill3Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1357,8 +1357,8 @@ public class Main {
                 case "wis":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill3Genauigkeit >= trefferChance){
-                        range1 = (spielerWis+(skill3Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2));
-                        range2 = (int) Math.ceil(((spielerWis+(skill3Kraft/100*spielerWis))-(gegnerDef+(gegnerWis/2)))*1.3);
+                        range1 = (((skill3Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis));
+                        range2 = ((int) Math.ceil((((skill3Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1390,8 +1390,8 @@ public class Main {
                 case "str":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill4Genauigkeit >= trefferChance){
-                        range1 = (spielerAtk+(skill4Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2));
-                        range2 = (int) Math.ceil(((spielerAtk+(skill4Kraft/100*spielerStr))-(gegnerDef+(gegnerStr/2)))*1.3);
+                        range1 = (((skill4Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                        range2 = ((int) Math.ceil(((((skill4Kraft*spielerStr)/100)+(spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1409,8 +1409,8 @@ public class Main {
                 case "dex":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill4Genauigkeit >= trefferChance){
-                        range1 = (spielerDex+(skill4Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2));
-                        range2 = (int) Math.ceil(((spielerDex+(skill4Kraft/100*spielerDex))-(gegnerDef+(gegnerDex/2)))*1.3);
+                        range1 = (((skill4Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex));
+                        range2 = ((int) Math.ceil(((((skill4Kraft*spielerDex)/100)+(spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1428,8 +1428,8 @@ public class Main {
                 case "kno":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill4Genauigkeit >= trefferChance){
-                        range1 = (spielerKno+(skill4Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2));
-                        range2 = (int) Math.ceil(((spielerKno+(skill4Kraft/100*spielerKno))-(gegnerDef+(gegnerKno/2)))*1.3);
+                        range1 = (((skill4Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno));
+                        range2 = ((int) Math.ceil(((((skill4Kraft*spielerKno)/100)+(spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno))*1.5));
 
                         if ((range1 < 0 )|(range2 == 0)){
                             range1 = 0;
@@ -1447,8 +1447,89 @@ public class Main {
                 case "wis":
                     trefferChance = ((int) (Math.random()*100));
                     if (skill4Genauigkeit >= trefferChance){
-                        range1 = (((spielerAtk+(skill4Kraft/100*spielerWis))*spielerWis/10)-(gegnerDef+(gegnerWis/2)))/2;
-                        range2 = ((int) Math.ceil(((((spielerAtk+(skill4Kraft/100*spielerWis))*spielerWis/10)-(gegnerDef+(gegnerWis/2)))/2)*1.3));
+                        range1 = (((skill4Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis));
+                        range2 = ((int) Math.ceil(((((skill4Kraft*spielerWis)/100)+(spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis))*1.5));
+                        System.out.println(range1);
+                        System.out.println(range2);
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+            }
+        });
+        skillBtn5.addActionListener(e -> {
+            switch (skill5Mod){
+                case "str":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill5Genauigkeit >= trefferChance){
+                        range1 = (((skill5Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                        range2 = ((int) Math.ceil(((((skill5Kraft*spielerStr)/100)+(spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "dex":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill5Genauigkeit >= trefferChance){
+                        range1 = (((skill5Kraft*spielerDex)/100)+((spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex));
+                        range2 = ((int) Math.ceil(((((skill5Kraft*spielerDex)/100)+(spielerAtk+spielerDex)/8)-(gegnerDef+gegnerDex))*1.5));
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "kno":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill5Genauigkeit >= trefferChance){
+                        range1 = (((skill5Kraft*spielerKno)/100)+((spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno));
+                        range2 = ((int) Math.ceil(((((skill5Kraft*spielerKno)/100)+(spielerAtk+spielerKno)/8)-(gegnerDef+gegnerKno))*1.5));
+
+                        if ((range1 < 0 )|(range2 == 0)){
+                            range1 = 0;
+                            range2 = 1;
+                        } else if (range1 >= range2){
+                            range2 = range1;
+                            range2++;
+                        }
+                        angriff = rnd.nextInt(range1, range2);
+                        spielerAngriff();
+                    } else {
+                        spielerVerfehlt();
+                    }
+                    break;
+                case "wis":
+                    trefferChance = ((int) (Math.random()*100));
+                    if (skill5Genauigkeit >= trefferChance){
+                        range1 = (((skill5Kraft*spielerWis)/100)+((spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis));
+                        range2 = ((int) Math.ceil(((((skill5Kraft*spielerWis)/100)+(spielerAtk+spielerWis)/8)-(gegnerDef+gegnerWis))*1.5));
                         System.out.println(range1);
                         System.out.println(range2);
                         if ((range1 < 0 )|(range2 == 0)){
@@ -1560,6 +1641,49 @@ public class Main {
                     "<font color='#3cb371'><br>Dex: </font>"+spielerDex+"<br><font color='#94d0ff'>Int: </font>"+
                     spielerKno+"<br><font color='#ffe400'>Wis: </font>"+spielerWis);
             vorschauLbl.setIcon(vorschauBild);
+
+
+
+            skill1Name = StrSkills.angriffSkill.name;
+            skill1Kraft = StrSkills.angriffSkill.kraft;
+            skill1Genauigkeit = StrSkills.angriffSkill.genauigkeit;
+            skill1Mod = StrSkills.angriffSkill.mod;
+            skill1Bild = StrSkills.angriffSkill.bild;
+            skillBtn1.setIcon(skill1Bild);
+            skillBtn1.setToolTipText(StrSkills.angriffSkill.toolText);
+
+            skill2Name = StrSkills.ansturmSkill.name;
+            skill2Kraft = StrSkills.ansturmSkill.kraft;
+            skill2Genauigkeit = StrSkills.ansturmSkill.genauigkeit;
+            skill2Mod = StrSkills.ansturmSkill.mod;
+            skill2Bild = StrSkills.ansturmSkill.bild;
+            skillBtn2.setToolTipText(StrSkills.ansturmSkill.toolText);
+            skillBtn2.setIcon(skill2Bild);
+
+            skill3Name = StrSkills.blitzschlagSkill.name;
+            skill3Kraft = StrSkills.blitzschlagSkill.kraft;
+            skill3Genauigkeit = StrSkills.blitzschlagSkill.genauigkeit;
+            skill3Mod = StrSkills.blitzschlagSkill.mod;
+            skill3Bild = StrSkills.blitzschlagSkill.bild;
+            skillBtn3.setToolTipText(StrSkills.blitzschlagSkill.toolText);
+            skillBtn3.setIcon(skill3Bild);
+
+            skill4Name = StrSkills.stampferSkill.name;
+            skill4Kraft = StrSkills.stampferSkill.kraft;
+            skill4Genauigkeit = StrSkills.stampferSkill.genauigkeit;
+            skill4Mod = StrSkills.stampferSkill.mod;
+            skill4Bild = StrSkills.stampferSkill.bild;
+            skillBtn4.setToolTipText(StrSkills.stampferSkill.toolText);
+            skillBtn4.setIcon(skill4Bild);
+
+            skill5Name = StrSkills.krueppelnderSchlagSkill.name;
+            skill5Kraft = StrSkills.krueppelnderSchlagSkill.kraft;
+            skill5Genauigkeit = StrSkills.krueppelnderSchlagSkill.genauigkeit;
+            skill5Mod = StrSkills.krueppelnderSchlagSkill.mod;
+            skill5Bild = StrSkills.krueppelnderSchlagSkill.bild;
+            skillBtn5.setToolTipText(StrSkills.krueppelnderSchlagSkill.toolText);
+            skillBtn5.setIcon(skill5Bild);
+
             con.repaint();
         });
         auswahlJaegerBtn.addActionListener(e -> {
@@ -1730,8 +1854,8 @@ public class Main {
             mapInitialisieren();
             gegnerInitialisieren();
             btnInitialisieren();
-            charakterAuswahl();
             skillLeiste();
+            charakterAuswahl();
             adminFenster();
         }
     }
