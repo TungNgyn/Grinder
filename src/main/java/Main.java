@@ -18,9 +18,8 @@ public class Main {
             logBtnPanel, adminPanel, auswahlPanelLinks, vorschauPanel,
             auswahlPanelRechts, gegnerInfoPanel, gameOverBtnPanel,
             gegnerBildPanel, naviPanel;
-    private static JTextArea logTextArea;
+    private static JTextArea logTextArea, mainTextArea;
     private static JLabel titelLbl, statSpielerName, statSpielerHpLbl, statSpielerHp,
-            mainTextLbl,
             statspielerSpLbl, statspielerSp, statSpielerExpLbl, statSpielerExp,
             statSpielerAtkLbl, statSpielerAtk, statSpielerDefLbl, statSpielerDef,
             spielGegnerHp,
@@ -38,7 +37,7 @@ public class Main {
             adminBtn11, adminBtn12, adminBtn13, strUpBtn, dexUpBtn, knoUpBtn, wisUpBtn,
             naviLinksBtn, naviRechtsBtn;
     private static Container con, conLog, conAdmin;
-    private static JScrollPane logTextAreaScroll;
+    private static JScrollPane logTextAreaScroll, mainTextAreaScroll;
     private static JProgressBar spielerHpBar, spielerSpBar, spielerExpBar, gegnerHealthBar;
     static Font titelFont, normalFont, startBtnFont, statFont, textFont, mainTextFont, vorschauFont, barFont;
     static String gegnerName, spielerName, skill1Name, skill1Mod, gegnerMod, skill2Name, skill3Name,skill4Name,
@@ -141,7 +140,6 @@ public class Main {
         logTextAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         logTextAreaScroll.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
         logPanel.add(logTextAreaScroll);
-        logPanel.setBackground(Color.GREEN);
 
         logBtnPanel = new JPanel();
         logBtnPanel.setBounds(17, 300, 450, 50);
@@ -247,9 +245,9 @@ public class Main {
         adminPanel.add(adminBtn13);
         //endregion
 
-        adminBtn1.addActionListener(e -> logTextArea.setText(""));
+        adminBtn1.addActionListener(e -> logTextArea.append(""));
         adminBtn2.addActionListener(e -> {
-            mainTextLbl.setText("<br>aaaaaaaaaaaaaaaaaa<br>bbbbbbbbbbbbbb<br>>cccccccccccc<br>ddddddddddddd<br>eeeeeeeeeeee");
+            mainTextArea.append("<br>aaaaaaaaaaaaaaaaaa<br>bbbbbbbbbbbbbb<br>>cccccccccccc<br>ddddddddddddd<br>eeeeeeeeeeee");
             logTextArea.append("aaaaaaaaaaaaaaaaaa\nbbbbbbbbbbbbbb\ncccccccccccc\nddddddddddddd\neeeeeeeeeeee");
         });
         adminBtn3.addActionListener(e -> {
@@ -430,25 +428,28 @@ public class Main {
         gegnerHealthBar.setValue(gegnerHp);
     }
     public static void spielerAngriff() {
-        if(gegnerHp > 0){
-            if (angriff <= 0) {
-                angriff = 0;
+        Timer timer = new Timer(700, e -> {
+            if(gegnerHp > 0){
+                if (angriff <= 0) {
+                    angriff = 0;
+                }
+                gegnerHp -= angriff;
+                logTextArea.append("\n" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
+                mainTextArea.append( "\n" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
+                if (gegnerHp <= 0) {
+                    gegnerHp = 0;
+                }
+                updateGegnerHp();
+                updateSpielerStats();
             }
-            gegnerHp -= angriff;
-            logTextArea.append("\n" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
-            mainTextLbl.setText("<html>" + spielerName + " verursacht " + angriff + " Schaden an " + gegnerName + "!");
-            if (gegnerHp <= 0) {
-                gegnerHp = 0;
-            }
-            wait(700);
-            updateGegnerHp();
-            updateSpielerStats();
-        }
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
     public static void spielerBesiegt(){
             spielerHp = 0;
             logTextArea.append("\nGestorben...");
-            mainTextLbl.setText(mainTextLbl.getText()+"<br>Gestorben...!");
+            mainTextArea.append("<br>Gestorben...!");
             updateSpielerStats();
             updateGegnerHp();
             gameOverScreen();
@@ -512,25 +513,29 @@ public class Main {
         if (schaden <= 0){
             schaden = 0;
         }
-        spielerHp -= schaden;
-        spielerHpBar.setValue(spielerHp);
-        logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
-        mainTextLbl.setText(mainTextLbl.getText()+"<br>"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
-        if (spielerHp <= 0) {
-            spielerHp = 0;
-            spielerBesiegt();
-        }
-        updateGegnerHp();
-        updateSpielerStats();
+        Timer timer = new Timer (700, e -> {
+            spielerHp -= schaden;
+            spielerHpBar.setValue(spielerHp);
+            logTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+            mainTextArea.append("\n"+gegnerName+" verursacht "+schaden+" Schaden an "+spielerName+"!");
+            if (spielerHp <= 0) {
+                spielerHp = 0;
+                spielerBesiegt();
+            }
+            updateGegnerHp();
+            updateSpielerStats();
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
     public static void gegnerBesiegt(){
         Timer timer = new Timer(0, e -> {
             gegnerHp = 0;
             logTextArea.append("\nGewonnen!");
-            mainTextLbl.setText(mainTextLbl.getText() + "<br>Gewonnen!");
+            mainTextArea.append("\nGewonnen!");
             Timer timer2 = new Timer(700, e1 -> {
                 logTextArea.append("\n" + gegnerExp + " Erfahrungspunkte erhalten.");
-                mainTextLbl.setText(mainTextLbl.getText() + "<br>" + gegnerExp + " Erfahrungspunkte erhalten.");
+                mainTextArea.append("\n" + gegnerExp + " Erfahrungspunkte erhalten.");
                 spielerExp += gegnerExp;
                 gegnerBildLbl.setVisible(false);
                 gegnerInfoPanel.setVisible(false);
@@ -551,12 +556,36 @@ public class Main {
         spielPanel.setBounds(20,20,500,300);
         spielPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
 
+//        textAreaPanel = new JPanel();
+//        textAreaPanel.setBounds(20,330,500,140);
+//        textAreaPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+//
+//        mainTextArea = new JTextArea();
+//        mainTextArea.setPreferredSize(new Dimension(480,120));
+//        mainTextArea.setLineWrap(true);
+//        mainTextArea.setWrapStyleWord(true);
+////        mainTextArea.setEnabled(false);
+//        mainTextArea.setFont(mainTextFont);
+//
+//        mainTextAreaScroll = new JScrollPane(mainTextArea);
+//        mainTextAreaScroll.setPreferredSize(new Dimension(480, 120));
+//        mainTextAreaScroll.setBorder(BorderFactory.createEmptyBorder());
+//        mainTextAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+//        textAreaPanel.add(mainTextAreaScroll);
+
         textAreaPanel = new JPanel();
         textAreaPanel.setBounds(20,330,500,140);
-        textAreaPanel.setBorder(BorderFactory.createLineBorder(Color.WHITE,2,true));
+        mainTextArea = new JTextArea();
+        mainTextArea.setLineWrap(true);
+        mainTextArea.setEditable(false);
+        mainTextArea.setFont(mainTextFont);
 
-        mainTextLbl = new JLabel("<html>TEST<br>hallotestt2<br>qweqe");
-        mainTextLbl.setFont(mainTextFont);
+        mainTextAreaScroll = new JScrollPane(mainTextArea);
+        mainTextAreaScroll.setPreferredSize(new Dimension(500, 135));
+        mainTextAreaScroll.setBorder(BorderFactory.createEmptyBorder());
+        mainTextAreaScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        mainTextAreaScroll.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
+        textAreaPanel.add(mainTextAreaScroll);
 
         skillBtnPanel = new JPanel();
         SpringLayout skillBtnLayout = new SpringLayout();
@@ -1087,7 +1116,6 @@ public class Main {
         vorschauPanel.setVisible(false);
         auswahlPanelRechts.setVisible(false);
         auswahlBtn.setVisible(false);
-        textAreaPanel.add(mainTextLbl);
         updateSpielerStats();
         con.add(spielerStatsPanel);
         con.add(spielPanel);
@@ -1102,7 +1130,7 @@ public class Main {
     public static void spielerVerfehlt(){
         if(gegnerHp > 0){
             logTextArea.append("\n" + spielerName + " verfehlt...");
-            mainTextLbl.setText("<html>" + spielerName + " verfehlt...");
+            mainTextArea.append("\n" + spielerName + " verfehlt...");
             if (gegnerHp > 0)wait(700);
         }
     }
@@ -1293,6 +1321,38 @@ public class Main {
                         }
                         angriff = rnd.nextInt(range1, range2);
                         spielerAngriff();
+
+                        if (schaden <= 0){
+                            schaden = 0;
+                        }
+                        Timer timer = new Timer (700, e1 -> {
+                            trefferChance = ((int) (Math.random()*100));
+                            if (skill3Genauigkeit >= trefferChance){
+                                range1 = (((skill3Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr));
+                                range2 = ((int) Math.ceil((((skill3Kraft*spielerStr)/100)+((spielerAtk+spielerStr)/8)-(gegnerDef+gegnerStr))*1.5));
+
+                                if ((range1 < 0 )|(range2 == 0)){
+                                    range1 = 0;
+                                    range2 = 1;
+                                } else if (range1 >= range2){
+                                    range2 = range1;
+                                    range2++;
+                                }
+                                angriff = rnd.nextInt(range1, range2);
+                                spielerAngriff();
+
+                                if (schaden <= 0){
+                                    schaden = 0;
+                                }
+                        }
+                        });
+                        timer.setRepeats(false);
+                        timer.start();
+                        Timer timer2 = new Timer(700, e2 -> {
+                            wait(700);
+                        });
+                        timer2.setRepeats(false);
+                        timer2.start();
                     } else {
                         spielerVerfehlt();
                     }
